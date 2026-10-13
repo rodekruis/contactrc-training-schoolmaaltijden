@@ -1145,7 +1145,7 @@ function outboundPane({ch='wa', mode='start', tpl='start_conversation_en', num='
   return `<div class="grid-ob" style="display:grid;grid-template-columns:minmax(0,1fr);gap:8px">
   <div class="box"><b style="font-size:13px">Outbound Messaging</b><div style="color:var(--m-muted);margin-bottom:8px">Send an SMS or WhatsApp to someone.</div>
     <div class="field"><label>Channel</label><div class="seg"><button class="dis" data-ob="sms">● SMS</button><button class="${ch==='wa'?'on':''}" data-ob="wa"><span style="color:#1D9A5B">●</span> WhatsApp</button></div>
-      ${smsWarn?`<div class="smsno">${ic('ban')} Werkt niet, kies altijd WhatsApp.</div>`:`<div style="font-size:10.5px;color:#8A1C12;margin-top:3px">SMS: werkt niet, kies altijd WhatsApp.</div>`}</div>
+      </div>
     <div class="field ${hot==='tpl'?'hot':''}"><label>Template</label><select data-ob="tpl"><option value="" ${!tpl?'selected':''}>Kies een template</option><option ${tpl==='start_conversation_en'?'selected':''}>start_conversation_en</option><option>(templates in NL, AR, TR: namen te valideren)</option></select><span style="font-size:10.5px;color:var(--m-muted)">WhatsApp conversations can only be started with an approved template.</span></div>
     <div class="field"><label>Message</label><div class="inp" style="min-height:44px;align-items:flex-start">Hello, this is the Netherlands Red Cross. We would like to get in touch with you about your request. Please reply to this message and one of our team will respond.</div></div>
     <div class="field ${hot==='num'?'hot':''}"><label>Recipient</label><div style="display:grid;grid-template-columns:120px 1fr;gap:6px"><select><option>Netherlands +31</option></select><input class="crcin" data-ob="num" placeholder="6 12 34 56 78" value="${esc(num)}"></div></div>
@@ -1495,13 +1495,10 @@ function mountRLQueue(el){
 const OPEN = [
   // Pronetx
   {id:'p-gemist-tijd', who:'Pronetx', mod:'gesprek-krijgen', text:'Hoeveel seconden heb je om een contact aan te nemen voordat het als gemist geldt? Nu 20 seconden; misschien wordt dit langer.'},
-  {id:'p-eod-routing', who:'Pronetx', mod:'whatsapp-24', text:'Reageert de PA op het einde-van-de-dag-bericht: komt de chat terug bij dezelfde agent, of met voorrang in de wachtrij (zo staat het in de flow, bij laatste contact < 72 uur)? En wat als die agent er niet is?'},
   {id:'p-bijlagen', who:'Pronetx', mod:'whatsapp', text:'Bijlagen: blijven ze 24 uur beschikbaar? Welke bestandstypes en welke maximale grootte?'},
   {id:'p-tabs', who:'Pronetx', mod:'werkplek', text:'Welke tabs zien agents echt (Performance, Worklist)?'},
-  {id:'p-acw-voice', who:'Pronetx', mod:'afronden', text:'Ziet het afronden na een gesprek er hetzelfde uit als na een chat (After Contact-tab met Set Disposition, Done en Close contact)?'},
   {id:'p-acw-tijd', who:'Pronetx', mod:'afronden', text:'Maximale After Call Work-tijd per kanaal (bellen, WhatsApp).'},
   {id:'p-outbound-routing', who:'Pronetx', mod:'outbound', text:'Telt een uitgaand gesprek mee voor de volgorde waarin je inkomende gesprekken krijgt?'},
-  {id:'p-transcripts', who:'Pronetx', mod:'afronden', text:'Waar en wanneer zien agents transcripts, samenvattingen en opnames van contacten?'},
   {id:'p-schermteksten', who:'Pronetx', mod:'gesprek-krijgen', text:'Exacte schermteksten van statussen die we nog niet op een screenshot hebben gezien (bijvoorbeeld de status na een gemist contact en tijdens After Call Work). In de mockups staan ze in het Nederlands.'},
   {id:'p-ar-tr-warn', who:'Pronetx', mod:'reis-pa', text:'Tekst van de waarschuwing bij Arabisch en Turks ("mogelijk wordt u in het Engels geholpen") staat niet in de Prompts-Excel.'},
   {id:'p-accept-call', who:'Pronetx', mod:'callbacks', text:'Wanneer hoort de PA de prompt Callback_Accept_Call ("Uw terugbelafspraak wordt elk moment gestart...")? In de Excel staat "When will this be used".'},
@@ -1513,6 +1510,8 @@ const OPEN = [
   {id:'h-alle-contacten', who:'Hannah', mod:'rollen', text:'Zien agents alle contacten, of alleen hun eigen? (wens: alle)'},
   {id:'h-profiel', who:'Hannah', mod:'werkwijze', text:'Wat mag er wel en niet in het klantprofiel? (eerder afgesproken: alleen de naam)'},
   {id:'h-voicemail', who:'Hannah', mod:'callbacks', text:'Werkafspraak: welke tekst spreek je in op een voicemail?'},
+  {id:'p-nood-chat', who:'Pronetx', mod:'manager', text:'Welk bericht krijgt een PA op WhatsApp als de noodsluiting aan staat?'},
+  {id:'h-templates', who:'Hannah', mod:'rollen', text:'Maken agents zelf message templates, of doet een manager of admin dat?'},
   {id:'h-worklist', who:'Hannah', mod:'werkplek', text:'Waarvoor gebruiken agents de Worklist?'},
   {id:'h-openingstijden-wie', who:'Hannah', mod:'manager', text:'Wie stelt openingstijden en feestdagen vooraf in?'},
   // Overig
@@ -2419,7 +2418,7 @@ M({ id:'werkplek', group:'basis', title:'Je werkplek', icon:'layout', roles:['ag
 });
 
 /* 6. Rollen */
-const CAN = ['Gesprekken en chats aannemen','Doorverbinden','Beëindigen (met een bevestigingsvraag, tegen per ongeluk ophangen)','Naar elk nummer uitbellen via de computer','Contacten terugzoeken','Transcripts, samenvattingen en opnames bekijken en beluisteren','Klantprofielen zoeken, aanmaken en bewerken','Zelf quick responses en message templates maken','Tags toevoegen','Bestanden bijvoegen','Wachtrijcijfers zien'];
+const CAN = ['Gesprekken en chats aannemen','Doorverbinden','Beëindigen (met een bevestigingsvraag, tegen per ongeluk ophangen)','Naar elk nummer uitbellen via de computer','Contacten terugzoeken','Transcripts, samenvattingen en opnames bekijken en beluisteren','Klantprofielen zoeken, aanmaken en bewerken','Zelf message templates maken '+tv('h-templates','te valideren'),'Tags toevoegen','Bestanden bijvoegen','Wachtrijcijfers zien'];
 const CANNOT = ['Opnames of transcripts downloaden','Iets verwijderen','Meeluisteren met collega\'s','Rapportages en dashboards zien','Instellingen wijzigen'];
 M({ id:'rollen', group:'basis', title:'Rollen', icon:'users', roles:['agent','manager'],
   lead:'Agent, manager en admin: wie kan wat?',
@@ -2805,7 +2804,7 @@ M({ id:'gesprek-voeren', group:'agent', title:'Gesprek voeren', icon:'phone', ro
   }},
   quiz:[
     {q:"Je zet de PA op Hold om iets op te zoeken. Wat hoort de PA?", o:["Niets, stilte","Het welkomstbericht","Jou zoeken en mompelen"], a:1, f:"Op Hold hoort de PA het welkomstbericht. Op Mute is het stil: de PA hoort jou niet, maar ook geen wachtmuziek."},
-    {q:"Je belt met een PA en wilt haar ook even een WhatsApp sturen. Hoe?", o:["Via SMS in de outbound messaging app","Via de outbound messaging app, met kanaal WhatsApp","Dat kan niet tijdens een gesprek"], a:1, f:"Via de outbound messaging app. Het kanaal is altijd WhatsApp: de SMS-optie werkt niet."},
+    {q:"Je belt met een PA en wilt haar ook even een WhatsApp sturen. Hoe?", o:["Via Quick connects","Via de outbound messaging app, met kanaal WhatsApp","Dat kan niet tijdens een gesprek"], a:1, f:"Via de outbound messaging app. Het kanaal is altijd WhatsApp."},
   ]
 });
 
@@ -2943,47 +2942,40 @@ const QR = [
 ];
 M({ id:'whatsapp', group:'agent', title:'WhatsApp-chats', icon:'chats', roles:['agent'],
   crview:{ title:'Het chatvenster', intro:'Klik door wat je allemaal in het chatvenster kunt doen. Nagebouwd op basis van schermafdrukken.', keys:['chat'] },
-  lead:'Meerdere chats tegelijk, quick responses en bijlagen.',
+  lead:'Meerdere chats tegelijk en bijlagen.',
   photo:['portrait.jpg','Portret van een vrouw buiten bij het water'],
   uitleg:`<div class="prose"><ul>
     <li>Je kunt <b>meerdere chats tegelijk</b> hebben (maximaal 10). Ze staan onder elkaar in het belpaneel. Klik op een chat om hem te openen.</li>
-    <li><b>Quick responses</b> zijn standaardteksten. Typ <span class="mono">/#</span> met een zoekwoord of snelcode, of klik op het <b>sterretje</b>. Het sterretje verschijnt pas als de chat loopt.</li>
-    <li>Agents maken quick responses <b>zelf</b>. Zorg dat elke quick response er is in <b>alle 4 de talen</b> (NL, EN, AR, TR).</li>
     <li><b>Bijlagen:</b> pdf's, foto's en dergelijke kun je versturen en ontvangen. Bijlagen blijven 24 uur beschikbaar ${tv('p-bijlagen')}. Contacten blijven 2 jaar bewaard.</li></ul></div>`,
-  demo:{ title:'Simulatie: drie chats en een quick response', intro:'Wissel tussen de chats. Typ in de chat van PA 1 /# of klik op het sterretje, kies een quick response en verstuur. Stuur daarna een pdf mee.', mount: el => {
+  demo:{ title:'Simulatie: drie chats en een bijlage', intro:'Wissel tussen de chats. Typ in de chat van PA 1 een antwoord en verstuur het. Stuur daarna een pdf mee met de paperclip.', mount: el => {
     const chats=[{n:'PA 1',num:'+31 6 12 34 56 78',log:[{me:0,t:'Hallo, wanneer komt mijn VISA-kaart?'}]},{n:'PA 2',num:'+31 6 22 33 44 55',log:[{me:0,t:'Mijn kind gaat naar een andere school.'}]},{n:'PA 3',num:'+31 6 98 76 54 32',log:[{me:0,t:'Goedemorgen, ik heb een vraag over aanmelden.'}]}];
     let cur=0, text='', menu=false, filter='', sentQR=false, sentPdf=false;
     const render=()=>{
       const c=chats[cur];
-      const list=QR.filter(q=>!filter || (q.c+q.n).toLowerCase().includes(filter.toLowerCase()));
       const slot = chats.map((x,i)=>`<button class="contact ${i===cur?'on':''}" data-c="${i}"><b>${ic('chat')} ${x.n}</b><span class="meta">WhatsApp · ${x.log.length} bericht${x.log.length>1?'en':''}</span></button>`).join('');
       const pane = `<div class="chatwin"><div class="msgs" data-scroll>${c.log.map(m=>`<div class="bub ${m.me?'me':'pa'}">${m.f?`${ic('file')} `:''}${esc(m.t)}</div>`).join('')}</div>
-        ${menu?`<div style="border-top:1px solid var(--m-line);padding:6px;max-height:150px;overflow:auto"><div class="inp" style="margin-bottom:4px">${ic('search')}<input data-f placeholder="Zoek quick response" value="${esc(filter)}"></div>${list.map(q=>`<button class="contact" data-qr="${q.c}" style="width:100%;margin-bottom:3px"><b>${esc(q.n)}</b><span class="meta">/#${q.c} · ${esc(q.t)}</span></button>`).join('')||'<div style="color:var(--m-muted)">Geen resultaten</div>'}</div>`:''}
-        <form class="composer" data-form><button type="button" class="mini" data-star title="Quick responses">${ic('star')}</button><button type="button" class="mini" data-clip title="Bijlage">${ic('clip')}</button><input data-in placeholder="Typ een bericht of /#" value="${esc(text)}" autocomplete="off"><button class="obtn fill" type="submit">${ic('send')}</button></form></div>`;
+        <form class="composer" data-form><button type="button" class="mini" data-clip title="Bijlage">${ic('clip')}</button><input data-in placeholder="Typ een bericht" value="${esc(text)}" autocomplete="off"><button class="obtn fill" type="submit">${ic('send')}</button></form></div>`;
       const pm = [{k:'day',text:'Vandaag'}, ...chats[0].log.map(m=>m.f?{from:m.me?'ag':'pa',html:`<b>${ic('file')} ${esc(m.t)}</b><br><span style="font-size:11px;color:#667781">PDF · 1 pagina</span>`,t:'10:15'}:{from:m.me?'ag':'pa',text:m.t,t:'10:14'})];
-      el.innerHTML = `<div class="steps"><span class="${sentQR?'ok':'on'}">1. Quick response versturen naar PA 1</span><span class="${sentPdf?'ok':sentQR?'on':''}">2. Pdf meesturen</span></div>
+      el.innerHTML = `<div class="steps"><span class="${sentQR?'ok':'on'}">1. Antwoord versturen naar PA 1</span><span class="${sentPdf?'ok':sentQR?'on':''}">2. Pdf meesturen</span></div>
       <div class="stage"><div>${crc({status:'busy', statusText:'Available', slot, tabs:['Customer','121 Platform','EspoCRM'], active:'Customer', pane, lower:quickConnects()})}</div><div><div class="muted" style="font-size:.85rem;text-align:center;margin-bottom:6px">Telefoon van PA 1</div>${phoneWA({msgs:pm})}</div></div>
-      ${sentQR&&sentPdf?`<div class="hint good" style="margin-top:12px">${ic('check')}<span>Goed! Tip: maak je eigen quick responses in alle 4 de talen.</span></div>`:''}`;
+      ${sentQR&&sentPdf?`<div class="hint good" style="margin-top:12px">${ic('check')}<span>Goed! Je hebt PA 1 geantwoord en een pdf meegestuurd.</span></div>`:''}`;
       scrollPhones(el);
-      const i=$(menu?'[data-f]':'[data-in]',el); if(i && (menu||text)) i.focus({preventScroll:true});
+      const i=$('[data-in]',el); if(i && text) i.focus({preventScroll:true});
     };
     el.addEventListener('click',e=>{
       const cb=e.target.closest('[data-c]'); if(cb){ cur=+cb.dataset.c; menu=false; text=''; render(); return; }
-      if(e.target.closest('[data-star]')){ menu=!menu; filter=''; render(); return; }
       if(e.target.closest('[data-clip]')){ chats[cur].log.push({me:1,t:'Uitleg-VISA-kaart.pdf',f:1}); if(cur===0) sentPdf=true; render(); return; }
-      const q=e.target.closest('[data-qr]'); if(q){ text=QR.find(x=>x.c===q.dataset.qr).t; menu=false; render(); return; }
     });
     el.addEventListener('input',e=>{
-      if(e.target.matches('[data-in]')){ text=e.target.value; if(text.startsWith('/#')){ menu=true; filter=text.slice(2); render(); } }
-      if(e.target.matches('[data-f]')){ filter=e.target.value; const pos=e.target.selectionStart; render(); const f=$('[data-f]',el); if(f){ f.setSelectionRange(pos,pos);} }
+      if(e.target.matches('[data-in]')){ text=e.target.value; }
     });
-    el.addEventListener('submit',e=>{ e.preventDefault(); if(!text.trim()||text.startsWith('/#')) return; chats[cur].log.push({me:1,t:text}); if(cur===0 && QR.some(q=>q.t===text)) sentQR=true; text=''; render();
+    el.addEventListener('submit',e=>{ e.preventDefault(); if(!text.trim()) return; chats[cur].log.push({me:1,t:text}); if(cur===0) sentQR=true; text=''; render();
       if(cur===0) setTimeout(()=>{ chats[0].log.push({me:0,t:'Dank u wel!'}); render(); },1000); });
     render();
   }},
   quiz:[
-    {q:"Je wilt snel een standaardantwoord sturen. Hoe open je een quick response?", o:["Typ /# met een zoekwoord, of klik op het sterretje","Via Quick connects","Via de outbound messaging app"], a:0, f:"Typ /# met een zoekwoord of snelcode, of klik op het sterretje. Het sterretje verschijnt pas als de chat loopt."},
-    {q:"Je maakt een handige nieuwe quick response. Waar let je op?", o:["Alleen in het Nederlands is genoeg","Maak hem in alle 4 de talen: NL, EN, AR en TR"], a:1, f:"Agents maken quick responses zelf, en ze moeten er zijn in alle 4 de talen."},
+    {q:"Je hebt 10 chats open. Krijg je nog een nieuwe chat?", o:["Ja, er is geen maximum","Nee: je hebt maximaal 10 chats tegelijk"], a:1, f:"Je kunt maximaal 10 chats tegelijk hebben. Daarna krijg je geen nieuwe chat meer, een gesprek nog wel."},
+    {q:"Een PA stuurt een foto en jij downloadt hem. Wat moet je weten?", o:["Niets, dat ziet niemand","Downloads worden bijgehouden: je naam en de tijd komen in een logboek"], a:1, f:"Downloads worden bijgehouden. Beheerders kunnen zien wie een bestand heeft geopend."},
   ]
 });
 
@@ -2994,7 +2986,10 @@ const dur = h => { const hh=Math.floor(h), mm=Math.round((h-hh)*60); return `${h
 
 /* 14. Het 24-uursprobleem */
 const STORIES = [
+  {id:'ma', t:'Ma 10:00: de hele dag druk', pa:10, ev:[{h:10, m:{from:'ag',text:P.greetChat}, s:'Open: de PA krijgt het welkomstbericht en staat in de wachtrij'},{h:17, m:{from:'ag',text:P.eod}, s:'17:00: de queue sluit. De PA wachtte nog en krijgt automatisch het einde-van-de-dag-bericht. De chat is gesloten.', closed:1}], canReply:true},
   {id:'di', t:'Di 16:30: druk, niet beantwoord', pa:24+16.5, ev:[{h:24+16.5, m:{from:'ag',text:P.greetChat}, s:'Open: de PA krijgt het welkomstbericht en staat in de wachtrij'},{h:24+17, m:{from:'ag',text:P.eod}, s:'17:00: de queue sluit. De PA wachtte nog en krijgt automatisch het einde-van-de-dag-bericht. De chat is gesloten.', closed:1}], canReply:true},
+  {id:'wo', t:'Wo 14:00: druk midden in de week', pa:2*24+14, ev:[{h:2*24+14, m:{from:'ag',text:P.greetChat}, s:'Open: de PA krijgt het welkomstbericht en staat in de wachtrij'},{h:2*24+17, m:{from:'ag',text:P.eod}, s:'17:00: de queue sluit. De PA wachtte nog en krijgt automatisch het einde-van-de-dag-bericht. De chat is gesloten.', closed:1}], canReply:true},
+  {id:'do', t:'Do 16:55: net voor sluiting', pa:3*24+16+55/60, ev:[{h:3*24+16+55/60, m:{from:'ag',text:P.greetChat}, s:'Open: de PA krijgt het welkomstbericht en staat in de wachtrij'},{h:3*24+17, m:{from:'ag',text:P.eod}, s:'17:00: de queue sluit, 5 minuten later. De PA krijgt automatisch het einde-van-de-dag-bericht. De chat is gesloten.', closed:1}], canReply:true},
   {id:'vr', t:'Vr 16:30: vlak voor het weekend', pa:4*24+16.5, ev:[{h:4*24+16.5, m:{from:'ag',text:P.greetChat}, s:'Open: de PA krijgt het welkomstbericht en staat in de wachtrij'},{h:4*24+17, m:{from:'ag',text:P.eodWeekend}, s:'17:00: de queue sluit. De PA wachtte nog en krijgt automatisch de weekendversie van het bericht. De chat is gesloten.', closed:1}], canReply:true},
   {id:'za', t:'Za 11:00: in het weekend', pa:5*24+11, ev:[{h:5*24+11, m:{from:'ag',text:P.eodWeekend}, s:'Niet in de wachtrij: de PA krijgt de weekendversie', closed:1}], canReply:true},
   {id:'zo', t:'Zo 17:15: zondagavond', pa:6*24+17.25, ev:[{h:6*24+17.25, m:{from:'ag',text:P.closedWeekday}, s:'In de wachtrij (vanaf zondag 17:00 weer)'},{h:7*24+9, m:null, s:'Maandag 9:00: de chat komt automatisch bij een agent binnen via de wachtrij.'}], deadline:7*24+17},
@@ -3004,7 +2999,7 @@ M({ id:'whatsapp-24', group:'agent', title:'Het 24-uursprobleem', icon:'clock', 
   uitleg:`<div class="prose">
     <p>WhatsApp heeft een regel: <b>na 24 uur zonder bericht van de PA</b> mag je de PA niet meer zomaar een bericht sturen. Dan mag je alleen nog een <b>WhatsApp-template</b> sturen: een vooraf goedgekeurd bericht, via de outbound messaging app (zie de module Outbound).</p>
     <ul><li><b>Om 17:00</b> sluit de queue. Staan er dan nog PA's in de wachtrij, dan krijgen ze automatisch het <b>einde-van-de-dag-bericht</b>: <i>"Sorry, het was vandaag erg druk en we hebben uw vraag nog niet kunnen beantwoorden. Heeft u nog steeds een vraag? Stuur ons dan een kort bericht terug..."</i> De chat wordt gesloten. Op vrijdag krijgen ze de weekendversie.</li>
-    <li>Reageert de PA, dan komt het bericht terug. Bij dezelfde agent, of met voorrang in de wachtrij? ${tv('p-eod-routing')}</li>
+    <li>Reageert de PA op dat bericht, dan komt de chat <b>met voorrang</b> terug in de wachtrij.</li>
     <li><b>Weekend:</b> van vrijdag 17:00 tot zondag 17:00 worden chats niet in de wachtrij gezet. De PA krijgt de weekendversie van het bericht.</li>
     <li><b>Vanaf zondag 17:00</b> worden chats wel weer in de wachtrij gezet. Op maandag komen ze <b>automatisch</b> bij jullie binnen via de wachtrij: je kiest ze niet zelf.</li></ul></div>`,
   demo:{ title:'Weektijdlijn met aftelklok', intro:'Kies een situatie en schuif de tijd vooruit. Kijk wat de PA krijgt en of je nog vrij kunt antwoorden.', mount: el => {
@@ -3017,7 +3012,7 @@ M({ id:'whatsapp-24', group:'agent', title:'Het 24-uursprobleem', icon:'clock', 
       const closedNow = lastEv?.closed && !(reply!=null && reply<=now && reply>lastEv.h);
       const msgs=[{k:'day',text:hm(st.pa).split(' ')[0]}, {from:'pa',text:'Hallo, ik heb een vraag over mijn kaart.',t:hm(st.pa).split(' ')[1]}];
       st.ev.forEach(e=>{ if(e.h<=now && e.m) msgs.push({...e.m, t:hm(e.h).split(' ')[1]}); if(e.h<=now && e.m===null) msgs.push({k:'sys',text:'Maandag 9:00: ContactRC gaat open'}); });
-      if(reply!=null && reply<=now) msgs.push({k:'day',text:hm(reply).split(' ')[0]},{from:'pa',text:'ja',t:hm(reply).split(' ')[1]},{k:'sys',html:`De chat komt terug ${'<span class="tv">'+ic('alert')+'bij wie: te valideren</span>'}`});
+      if(reply!=null && reply<=now) msgs.push({k:'day',text:hm(reply).split(' ')[0]},{from:'pa',text:'ja',t:hm(reply).split(' ')[1]},{k:'sys',text:'De chat komt met voorrang terug in de wachtrij'});
       const d=Math.floor(now/24);
       const week = DAYS.slice(0,7).map((x,i)=>`<div class="day ${i===d?'cur':''}"><b>${x}</b><span class="muted" style="font-size:.7rem">${i<5?'9-17':'dicht'}</span><div class="bar2">${i<5?`<i style="left:${9/24*100}%;width:${8/24*100}%"></i>`:''}${i===d?`<i style="left:${(now-d*24)/24*100}%;width:2px;background:var(--accent)"></i>`:''}</div></div>`).join('');
       const free = left>0;
@@ -3041,7 +3036,7 @@ M({ id:'whatsapp-24', group:'agent', title:'Het 24-uursprobleem', icon:'clock', 
   quiz:[
     {q:"Het laatste bericht van de PA is van gisteren 10:00. Het is nu 11:00. Wat kun je sturen?", o:["Gewoon een bericht in de chat","Alleen een WhatsApp-template via de outbound messaging app"], a:1, f:"Na 24 uur zonder bericht van de PA mag je alleen nog een template sturen."},
     {q:"Een PA stuurt zondag om 17:15 een WhatsApp. Wat gebeurt er met die chat?", o:["Niets, tot een agent hem zelf opzoekt","Hij staat in de wachtrij en komt maandag automatisch bij een agent binnen","Hij wordt gesloten met de weekendversie van het bericht"], a:1, f:"Vanaf zondag 17:00 worden chats weer in de wachtrij gezet. Maandag komen ze automatisch binnen: je kiest ze niet zelf."},
-    {q:"Het is 17:00, de queue sluit, en er wacht nog een PA. Wat gebeurt er?", o:["Niets, de chat blijft tot morgen in de wachtrij","De PA krijgt automatisch het einde-van-de-dag-bericht en de chat wordt gesloten","De chat gaat naar een andere agent"], a:1, f:"Om 17:00 krijgt een PA die nog wacht automatisch het einde-van-de-dag-bericht: het was druk vandaag, stuur een kort bericht terug als je vraag nog speelt. De chat wordt gesloten."},
+    {q:"Het is 17:00, de queue sluit, en er wacht nog een PA. Wat gebeurt er?", o:["Niets, de chat blijft tot morgen in de wachtrij","De PA krijgt automatisch het einde-van-de-dag-bericht en de chat wordt gesloten","De chat gaat naar een andere agent"], a:1, f:"Om 17:00 krijgt een PA die nog wacht automatisch het einde-van-de-dag-bericht: het was druk vandaag, stuur een kort bericht terug als je vraag nog speelt. De chat wordt gesloten. Reageert de PA, dan komt de chat met voorrang terug in de wachtrij."},
   ]
 });
 
@@ -3134,11 +3129,11 @@ M({ id:'outbound', rlviz:'out', crviz:['outcall','outmsg'], group:'agent', title
     <p>Hier stuur je een <b>WhatsApp-template</b>: een vooraf goedgekeurd bericht, per taal. Je kiest het template, het telefoonnummer, de modus, het kanaal en het afzendnummer.</p>
     <p>Je opent de app via de tab <b>NLRC Outbound...</b>. Staat die tab er niet? Open de app dan via <b>Apps</b> rechtsboven.</p>
     <p>Sluit je een WhatsApp-gesprek af dat jij zelf bent begonnen, dan komt er <b>geen After Call Work</b>.</p>
-    <ul><li><b>Kanaal is altijd WhatsApp.</b> De optie SMS staat er nog wel, maar werkt niet.</li>
+    <ul><li><b>Kanaal is altijd WhatsApp.</b></li>
     <li><b>Start conversation:</b> je begint een gesprek. Reageert de PA, dan komt het direct bij jou.</li>
     <li><b>Notify only:</b> je stuurt alleen een melding. Reageert de PA, dan komt die in de wachtrij.</li>
     <li>Hier <b>reset</b> je ook de taal van een PA.</li></ul>
-    <div class="callout big">${ic('target')}<div><b>Vuistregel</b><br>Lopend gesprek? Gebruik een <b>quick response</b>.<br>Jij begint het contact, of het laatste bericht van de PA is langer dan 24 uur geleden? Stuur een <b>template via de outbound app</b>.</div></div></div>`,
+    <div class="callout big">${ic('target')}<div><b>Vuistregel</b><br>Lopend gesprek? <b>Typ gewoon je bericht</b> in de chat.<br>Jij begint het contact, of het laatste bericht van de PA is langer dan 24 uur geleden? Stuur een <b>template via de outbound app</b>.</div></div></div>`,
   compare:[{topic:'Outbound bellen', redline:REDLINE_OUTCALL, crc:'Via de Number pad. Typ het nummer altijd met landcode. De PA ziet het nummer van Schoolmaaltijden.'},{topic:'Outbound berichten', redline:REDLINE_OUTBOUND, crc:'Via de outbound messaging app kies je template, telefoonnummer, modus (Start conversation of Notify only) en afzendnummer. Kanaal is altijd WhatsApp.'}],
   demo:{ title:'Simulatie 1: bel een PA', intro:'Zet jezelf op Available, open de Number pad, typ het nummer met landcode en klik Call.', mount: el => {
     let s=0, num='', dd=false, err='', pad=false;
@@ -3168,7 +3163,7 @@ M({ id:'outbound', rlviz:'out', crviz:['outcall','outmsg'], group:'agent', title
     render();
   }},
   oefening:{ title:'Simulatie 2: stuur een WhatsApp-template', intro:'Opdracht: stuur het template start_conversation_en naar +31 6 12 34 56 78, zodat de PA direct bij jou reageert. Volg de stappen hieronder. Probeer gerust eerst SMS.', mount: el => {
-    let mode='start', num='', tpl='', sent=false, smsWarn=false, err='';
+    let mode='start', num='', tpl='', sent=false, err='';
     const step=()=> sent?4 : !tpl?0 : num.replace(/\D/g,'').length<8?1 : mode!=='start'?2 : 3;
     const STEPS=['Kies bij <b>Template</b> het template <b>start_conversation_en</b>.','Vul bij <b>Recipient</b> het telefoonnummer van de PA in: laat Netherlands +31 staan en typ <b>6 12 34 56 78</b>.','Kies bij <b>Send mode</b> voor <b>Start conversation</b>.','Klik op <b>Send message</b>.'];
     const render=()=>{
@@ -3176,12 +3171,11 @@ M({ id:'outbound', rlviz:'out', crviz:['outcall','outmsg'], group:'agent', title
       const msgs = sent?[{k:'day',text:'Vandaag'},{from:'ag',text:'Hello, this is the Netherlands Red Cross. We would like to get in touch with you about your request. Please reply to this message and one of our team will respond.',t:'11:02'},{from:'pa',text:'Hi, yes please!',t:'11:05'},{k:'sys',text: mode==='start'?'Het antwoord komt direct bij jou binnen (of in de wachtrij als je niet beschikbaar bent).':'Het antwoord komt in de wachtrij.'}]:[];
       const list=`<div class="steps" style="margin-bottom:8px">${STEPS.map((x,k)=>`<span class="${k<st?'ok':k===st?'on':''}">${k+1}. ${['Template','Telefoonnummer','Send mode','Versturen'][k]}</span>`).join('')}</div>`;
       el.innerHTML = list + (err?`<div class="hint bad">${ic('alert')}<span>${err}</span></div>`:sent?`<div class="hint good">${ic('check')}<span>Verstuurd! Kanaal WhatsApp, template start_conversation_en, modus ${mode==='start'?'Start conversation':'Notify only'}.</span></div>`:`<div class="hint">${ic('target')}<span><b>Jouw beurt:</b> ${STEPS[st]}</span></div>`)+`
-      <div class="stage"><div>${crc({status:'av', tabs:['Customer','121 Platform','EspoCRM','NLRC Outbound...'], active:'NLRC Outbound...', pane:outboundPane({mode, num, tpl, sent, smsWarn, hot:['tpl','num','',''][st]||(st===3?'send':'')})})}</div><div>${phoneWA({msgs})}</div></div>`;
+      <div class="stage"><div>${crc({status:'av', tabs:['Customer','121 Platform','EspoCRM','NLRC Outbound...'], active:'NLRC Outbound...', pane:outboundPane({mode, num, tpl, sent, hot:['tpl','num','',''][st]||(st===3?'send':'')})})}</div><div>${phoneWA({msgs})}</div></div>`;
       if(st===2){ const b=$('[data-ob="start"]',el); b&&b.classList.add('hot'); }
       scrollPhones(el);
     };
     el.addEventListener('click',e=>{ const ob=e.target.closest('[data-ob]')?.dataset.ob; if(!ob||ob==='tpl'||ob==='num') return;
-      if(ob==='sms'){ smsWarn=true; render(); return; }
       if(ob==='start'||ob==='notify'){ mode=ob; sent=false; err=''; render(); return; }
       if(ob==='send'){ num=$('[data-ob="num"]',el).value; if(!tpl){ err='Kies eerst een template.'; render(); return; } if(num.replace(/\D/g,'').length<8){ err='Vul eerst het telefoonnummer van de PA in bij Recipient.'; render(); return; } err=''; sent=true; render(); }
     });
@@ -3189,17 +3183,17 @@ M({ id:'outbound', rlviz:'out', crviz:['outcall','outmsg'], group:'agent', title
     el.addEventListener('input',e=>{ if(e.target.matches('[data-ob="num"]')){ const before=step(); num=e.target.value; if(step()!==before){ const p=e.target.selectionStart; render(); const i=$('[data-ob="num"]',el); i.focus(); i.setSelectionRange(p,p); } } });
     render();
   }},
-  extra:{ title:'Quick response of template?', mount: el => {
-    const qs=[['De PA heeft je 10 minuten geleden een WhatsApp gestuurd en je bent in gesprek.',0],['Je wilt een PA die gisterochtend voor het laatst iets stuurde, nog iets laten weten.',1],['Je wilt een school uit jezelf benaderen via WhatsApp.',1],['Je wilt in een lopende chat je standaardbegroeting sturen.',0]];
+  extra:{ title:'Gewoon typen of template?', mount: el => {
+    const qs=[['De PA heeft je 10 minuten geleden een WhatsApp gestuurd en je bent in gesprek.',0],['Je wilt een PA die gisterochtend voor het laatst iets stuurde, nog iets laten weten.',1],['Je wilt een school uit jezelf benaderen via WhatsApp.',1],['Je wilt in een lopende chat de PA nog iets vragen.',0]];
     const ans={};
-    const render=()=>{ el.innerHTML = `<div style="display:grid;gap:8px">${qs.map((q,i)=>`<div class="row" style="justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--surface)"><span style="flex:1 1 220px;min-width:0">${q[0]}</span><span class="row" style="gap:6px">${['Quick response','Template'].map((o,v)=>`<button class="btn sm ${ans[i]===v?'':'soft'}" data-i="${i}" data-v="${v}">${o}</button>`).join('')}${ans[i]!=null?(ans[i]===q[1]?`<span style="color:var(--ok)">${ic('check')}</span>`:`<span style="color:var(--err)">${ic('x')}</span>`):''}</span></div>`).join('')}</div>`; };
+    const render=()=>{ el.innerHTML = `<div style="display:grid;gap:8px">${qs.map((q,i)=>`<div class="row" style="justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:var(--surface)"><span style="flex:1 1 220px;min-width:0">${q[0]}</span><span class="row" style="gap:6px">${['Gewoon typen','Template'].map((o,v)=>`<button class="btn sm ${ans[i]===v?'':'soft'}" data-i="${i}" data-v="${v}">${o}</button>`).join('')}${ans[i]!=null?(ans[i]===q[1]?`<span style="color:var(--ok)">${ic('check')}</span>`:`<span style="color:var(--err)">${ic('x')}</span>`):''}</span></div>`).join('')}</div>`; };
     el.addEventListener('click',e=>{const b=e.target.closest('[data-i]'); if(!b) return; ans[b.dataset.i]=+b.dataset.v; render();});
     render();
   }},
   quiz:[
     {q:"Je belt een PA terug via de Number pad. Hoe typ je het nummer?", o:["06 12 34 56 78","+31 6 12 34 56 78, altijd met landcode","Zonder 0: 6 12 34 56 78"], a:1, f:"Altijd met landcode, bijvoorbeeld +31."},
     {q:"Je stuurt een template met 'Notify only'. De PA reageert. Waar komt de reactie?", o:["Direct bij jou","In de wachtrij","Nergens"], a:1, f:"Bij Notify only komt een reactie in de wachtrij. Bij Start conversation komt die direct bij jou."},
-    {q:"In de outbound messaging app zie je nog de optie SMS staan. Wat doe je?", o:["SMS kiezen, kan geen kwaad","Altijd WhatsApp kiezen: SMS werkt niet"], a:1, f:"Altijd WhatsApp. De optie SMS staat er nog, maar werkt niet."},
+    {q:"Je wilt een PA die al 3 dagen niets heeft gestuurd een bericht sturen. Hoe?", o:["Gewoon typen in de oude chat","Een WhatsApp-template via de outbound messaging app"], a:1, f:"Na 24 uur zonder bericht van de PA mag je alleen nog een template sturen, via de outbound messaging app."},
   ]
 });
 
@@ -3218,12 +3212,12 @@ M({ id:'afronden', group:'agent', title:'Afronden: survey en After Call Work', i
     <li>Rechts opent de tab <b>After Contact</b>. Bij <b>Set Disposition</b> kies je <b>verplicht een label</b>. Je mag er meer dan één kiezen. Dat is belangrijk voor de datakwaliteit. De labels zijn dezelfde als in Redline.</li>
     <li>Klik op <b>Submit disposition</b> en daarna op <b>Done</b>.</li>
     <li>Sluit af met <b>Close contact</b> links onderaan.</li>
-    <li>De schermen hieronder zijn van een WhatsApp-chat. Bij een gesprek: ${tv('p-acw-voice')}</li>
+    <li>De schermen hieronder zijn van een WhatsApp-chat. Na een gesprek werkt het hetzelfde: de tab <b>After Contact</b> met Set Disposition, <b>Submit disposition</b>, <b>Done</b> en <b>Close contact</b>. Bij een gesprek zie je links ook het transcript met een samenvatting gemaakt door AI.</li>
     <li class="phi" style="list-style:none;margin-left:-1.2em;padding:6px 10px">Sluit je de ACW niet af, dan krijg je net als bij Gemist niets binnen.</li>
     <li>Maximale ACW-tijd per kanaal: ${tv('p-acw-tijd')}</li></ul>
     <h3>Transcripts en samenvattingen</h3>
-    <p>Agents kunnen transcripts, samenvattingen en opnames van contacten bekijken, en eerdere contacten zien in het klantprofiel. Waar en wanneer je die precies ziet: ${tv('p-transcripts')}</p></div>`,
-  rlviz:'acw', crviz:['acw'],
+    <p>Eerdere contacten zie je in het klantprofiel, bij de tab <b>Contact history</b>. Transcripts, samenvattingen en opnames zie je alleen als je bij een contact doorklikt naar de details: klik op de <b>drie puntjes</b> bij het contact en dan op <b>Go to Contact details page</b>. Hoe dat gaat, zie je in de visualisatie bij Wat is anders.</p></div>`,
+  rlviz:'acw', crviz:['acw','detailsAgent'],
   compare:[{topic:'After Call Work', redline:REDLINE_ACW+'<p style="margin-top:6px">De labels zijn dezelfde als in ContactRC.</p>'+HANNAH(), crc:'Start automatisch na End chat. Rechts opent de tab After Contact: kies één of meer labels (verplicht), klik Submit disposition en Done, en sluit af met Close contact.'}],
   demo:{ title:'Simulatie: de survey op de telefoon van de PA', intro:'Jij bent de PA. Kies bellen of WhatsApp en beantwoord de survey. Stop gerust halverwege: ook dan wordt het opgeslagen.', mount: el => {
     let ch='voice', a1=null, a2=null;
@@ -3318,17 +3312,39 @@ M({ id:'manager', group:'manager', title:'Overzicht voor managers', icon:'chart'
     <li><b>Openingstijden en feestdagen vooraf instellen</b>, zoals kerst. Wie dit doet: ${tv('h-openingstijden-wie')}</li>
     <li><b>Gesprekken analyseren en beoordelen</b> op de Contact details-pagina: opname, transcript, stemming van de PA, spreektijd, een AI-samenvatting en evaluaties. Zie hieronder.</li></ul></div>`,
   crview:{ title:'Statistieken en gesprekken analyseren', intro:'Eerst het Performance-dashboard met de live cijfers, daarna de Contact details-pagina van een voorbeeldgesprek.', keys:['perf','details'] },
-  demo:{ title:'Wat doet een schakelaar met de reis van de PA?', intro:'Zet een schakelaar om en kijk wat een beller op een dinsdagochtend hoort. (Hoe het beheerscherm eruitziet: te valideren.)', mount: el => {
-    const T={cb:true, temp:false, survey:true, nood:false};
+  demo:{ title:'Wat doet een schakelaar met de reis van de PA?', intro:'Kies bellen of WhatsApp, zet een schakelaar om en kijk wat de PA op een dinsdagochtend krijgt. Staat de survey aan, dan beantwoord jij als PA de vragen aan het eind. (Hoe het beheerscherm eruitziet: te valideren.)', mount: el => {
+    const T={cb:true, temp:false, survey:true, nood:false}; let ch='voice', sv=[];
+    const SV={voice:[P.s1Voice,P.s2Voice], chat:[P.s1Chat,P.s2Chat]}; const N=[5,3];
     const render=()=>{
-      const msgs=[{from:'sys',text:P.greetVoice}];
-      if(T.nood){ msgs.push({from:'sys',text:P.emergency},{from:'end',text:'Het gesprek wordt beëindigd.'}); }
-      else { msgs.push({from:'sys',text:P.langV1+' ...'},{from:'pa',text:'Toets 1'}); if(T.survey) msgs.push({from:'sys',text:P.pcsVoice}); msgs.push({from:'sys',text:P.recording},{from:'sys',text:P.queueVoice}); if(T.cb) msgs.push({from:'sys',text:P.offerCb+' (alleen als de wachttijd langer is dan 4 minuten)'}); msgs.push({from:'music',text:'♪ wachtmuziek ♪'}); }
+      const voice=ch==='voice'; const msgs=[]; let keys=null, quick=[];
+      if(voice){
+        msgs.push({from:'sys',text:P.greetVoice});
+        if(T.nood){ msgs.push({from:'sys',text:P.emergency},{from:'end',text:'Het gesprek wordt beëindigd.'}); }
+        else { msgs.push({from:'sys',text:P.langV1+' ...'},{from:'pa',text:'Toets 1'}); if(T.survey) msgs.push({from:'sys',text:P.pcsVoice}); msgs.push({from:'sys',text:P.recording},{from:'sys',text:P.queueVoice}); if(T.cb) msgs.push({from:'sys',text:P.offerCb+' (alleen als de wachttijd langer is dan 4 minuten)'}); msgs.push({from:'music',text:'♪ wachtmuziek ♪'},{from:'agent',text:'(gesprek met de agent)'});
+          if(T.survey){ for(let q=0;q<2;q++){ if(q>sv.length) break; msgs.push({from:'sys',text:SV.voice[q]}); if(sv[q]!=null) msgs.push({from:'pa',text:'Toets '+sv[q]}); } if(sv.length<2){ keys=Array.from({length:N[sv.length]},(_,i)=>String(i+1)); } }
+          if(!T.survey||sv.length===2) msgs.push({from:'end',text:'Het gesprek wordt beëindigd.'}); }
+      } else {
+        msgs.push({k:'day',text:'Dinsdag'},{from:'pa',text:'Hallo, ik heb een vraag over mijn kaart.',t:'10:00'});
+        if(T.nood){ msgs.push({from:'ag',html:esc(P.emergency)+'<br>'+tv('p-nood-chat','welk bericht bij WhatsApp: te valideren'),t:'10:00'}); }
+        else { msgs.push({from:'ag',text:P.greetChat,t:'10:00'},{from:'ag',text:P.langChat,t:'10:00'},{from:'pa',text:'1',t:'10:01'}); if(T.temp) msgs.push({from:'ag',text:P.tempChat,t:'10:01'}); msgs.push({from:'ag',text:P.queueChat,t:'10:01'},{k:'sys',text:'(chat met de agent)'});
+          if(T.survey){ for(let q=0;q<2;q++){ if(q>sv.length) break; msgs.push({from:'ag',text:SV.chat[q],t:'10:20'}); if(sv[q]!=null) msgs.push({from:'pa',text:String(sv[q]),t:'10:20'}); } if(sv.length<2) quick=Array.from({length:N[sv.length]},(_,i)=>String(i+1)); } }
+      }
+      const phone = voice ? phoneCall({sub:'di 10:00', msgs, keys, hotKeys:keys||[]}) : phoneWA({msgs, quick});
       const tg=(k,l,i)=>`<button class="row" data-t="${k}" style="justify-content:space-between;width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--surface)"><span>${ic(i)} ${l}</span><span class="chip" style="${T[k]?'background:var(--ok-bg);color:var(--ok)':''}">${T[k]?'Aan':'Uit'}</span></button>`;
-      el.innerHTML = `<div class="stage phoneonly"><div>${phoneCall({sub:'di 10:00', msgs})}</div><div style="display:grid;gap:8px;align-content:start">${tg('cb','Callback aanbieden','phoneOut')}${tg('temp','Tijdelijk bericht (alleen WhatsApp)','info')}${T.temp?`<div class="hint">${ic('info')}<span>Het tijdelijk bericht is alleen voor WhatsApp. Een beller hoort het niet.</span></div>`:''}${tg('survey','Survey na het gesprek','star')}${tg('nood','Noodsluiting','siren')}${T.nood?`<div class="hint bad">${ic('siren')}<span>Noodsluiting staat aan: niemand komt meer binnen.</span></div>`:''}</div></div>`;
+      const chb=(k,l,i)=>`<button class="btn sm ${ch===k?'':'ghost'}" data-ch="${k}">${ic(i)} ${l}</button>`;
+      const ask = T.survey&&!T.nood&&sv.length<2 ? `<div class="hint">${ic('target')}<span>Jij bent de PA. Beantwoord vraag ${sv.length+1} van 2: klik op een nummer ${voice?'op het toetsenbord van de telefoon':'onder in de chat'}.</span></div>` : (T.survey&&!T.nood?`<div class="hint good">${ic('check')}<span>Survey ingevuld: vraag 1 = ${sv[0]}, vraag 2 = ${sv[1]}.</span></div>`:'');
+      el.innerHTML = `<div class="row" style="gap:8px;margin-bottom:12px">${chb('voice','Bellen','phone')}${chb('chat','WhatsApp','chat')}</div>
+      <div class="stage phoneonly"><div>${phone}</div><div style="display:grid;gap:8px;align-content:start">${ask}
+        ${tg('cb','Callback aanbieden','phoneOut')}${!voice&&T.cb?`<div class="hint">${ic('info')}<span>Callbacks zijn alleen voor bellen. Een WhatsApp-PA krijgt dit niet.</span></div>`:''}
+        ${tg('temp','Tijdelijk bericht (alleen WhatsApp)','info')}${voice&&T.temp?`<div class="hint">${ic('info')}<span>Het tijdelijk bericht is alleen voor WhatsApp. Een beller hoort het niet. Kies WhatsApp om het te zien.</span></div>`:''}
+        ${tg('survey','Survey na het gesprek','star')}${tg('nood','Noodsluiting','siren')}${T.nood?`<div class="hint bad">${ic('siren')}<span>Noodsluiting staat aan: niemand komt meer binnen.</span></div>`:''}</div></div>`;
       scrollPhones(el);
     };
-    el.addEventListener('click',e=>{ const b=e.target.closest('[data-t]'); if(b){ T[b.dataset.t]=!T[b.dataset.t]; render(); } });
+    el.addEventListener('click',e=>{
+      const c=e.target.closest('[data-ch]'); if(c){ ch=c.dataset.ch; sv=[]; render(); return; }
+      const b=e.target.closest('[data-t]'); if(b){ T[b.dataset.t]=!T[b.dataset.t]; sv=[]; render(); return; }
+      const k=e.target.closest('[data-key]:not([disabled])')||e.target.closest('[data-q]'); if(k&&sv.length<2){ sv.push(+(k.dataset.key||(+k.dataset.q+1))); render(); }
+    });
     render();
   }},
   oefening:{ title:'Real-time: wie staat op Gemist?', intro:'Klik op de agent die je moet aanspreken. (Voorbeeldgegevens, scherm te valideren.)', mount: el => {
@@ -3401,8 +3417,8 @@ const DUO = [
   {t:'Warme transfer', ch:'phone', mod:'transfer', pa:'Bel in en vraag naar iemand die Engels spreekt.', ag:'Verbind door naar een collega (of de Engelse queue): overleg eerst, ga met z\'n drieën verder en stap dan uit.'},
   {t:'Callback en voicemail', ch:'phone', mod:'callbacks', pa:'Kies 1 bij het callback-aanbod. Neem bij de eerste poging niet op.', ag:'Neem de callback aan, luister naar de whisper en hang op vóór de voicemail opneemt.'},
   {t:'WhatsApp in het Engels', ch:'chat', mod:'taal', pa:'Stuur een WhatsApp, kies 2 (Engels) en stel je vraag in het Engels.', ag:'Neem de chat aan, antwoord in het Nederlands en kijk samen wat de PA ontvangt.'},
-  {t:'Quick response en bijlage', ch:'chat', mod:'whatsapp', pa:'Stuur een WhatsApp met een vraag.', ag:'Gebruik /# of het sterretje voor een quick response en stuur een pdf mee.'},
-  {t:'Template na 24 uur', ch:'chat', mod:'outbound', pa:'Wacht op een bericht van de agent.', ag:'Stuur via de outbound messaging app een template met Start conversation. Probeer ook SMS: wat zie je?'},
+  {t:'Bijlage sturen', ch:'chat', mod:'whatsapp', pa:'Stuur een WhatsApp met een vraag.', ag:'Beantwoord de vraag en stuur met de paperclip een pdf mee.'},
+  {t:'Template na 24 uur', ch:'chat', mod:'outbound', pa:'Wacht op een bericht van de agent.', ag:'Stuur via de outbound messaging app een template met Start conversation.'},
   {t:'Taal resetten', ch:'chat', mod:'taal', pa:'Kies per ongeluk een verkeerde taal.', ag:'Reset de taal van de PA via de outbound messaging app. De PA stuurt opnieuw een bericht en krijgt de taalvraag.'},
   {t:'Uitbellen', ch:'phone', mod:'outbound', pa:'Neem op als je gebeld wordt. Welk nummer zie je?', ag:'Bel de PA via de Number pad, met landcode. Rond af in After Call Work.'},
   {t:'Logs en melden', ch:'help', mod:'misgaat', pa:'Kijk mee.', ag:'Download je logs via het tandwiel en schrijf een melding met wat, hoe laat, welk contact, screenshot en logs.'},
