@@ -907,6 +907,18 @@ input[type=range]{width:100%;accent-color:var(--accent)}
 .vd-ag.clk:hover{box-shadow:0 0 0 2px #5B3FD6}
 .crfirst-ti{margin:0 0 6px;font-size:1.15rem}
 .chg-list{display:grid;gap:6px}
+.crv-clip{display:flex;justify-content:flex-end;gap:8px;align-items:center}
+.crv-qri{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:3px;background:#1B1B24;color:#fff;font-size:10px}
+.crv-qrl{border-top:1px solid #ddd;padding:6px 8px;display:grid;gap:6px;max-height:170px;overflow:auto}
+.crv-qrl>div{display:grid;grid-template-columns:62px 1fr;gap:6px;font-size:11px;padding:2px;border-radius:4px}
+.crv-qrl>div:hover{background:#F5F3FF}
+.crv-qrl b{color:#555;font-weight:600}
+.crv-qrt{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.crv-qrs{width:22px;height:22px;border-radius:4px;display:grid;place-items:center;color:#aaa;flex:none}
+.crv-qrs.on{background:#5B3FD6;color:#fff}
+.crv-ob input,.crv-ob select{font:inherit;font-size:11px;border:1px solid #bbb;border-radius:4px;padding:3px 6px;min-width:0;width:100%;background:#fff;color:#1B1B24}
+.crv-ob .crv-f2b input{border-color:#ccc}
+.crv-ob [data-ob]{cursor:pointer}
 .chg{border:1px solid var(--line);border-radius:12px;background:var(--surface);min-width:0}
 .chg.on{border-color:var(--accent)}
 .chg-h{display:flex;gap:10px;align-items:center;width:100%;background:none;border:0;padding:10px 14px;text-align:left}
@@ -1151,22 +1163,23 @@ function iframePane(name){
   return customerHome();
 }
 function outboundPane({ch='wa', mode='start', tpl='start_conversation_en', num='', smsWarn=false, sent=false, hot=''}){
-  return `<div class="grid-ob" style="display:grid;grid-template-columns:minmax(0,1fr);gap:8px">
-  <div class="box"><b style="font-size:13px">Outbound Messaging</b><div style="color:var(--m-muted);margin-bottom:8px">Send an SMS or WhatsApp to someone.</div>
-    <div class="field"><label>Channel</label><div class="seg"><button class="dis" data-ob="sms">● SMS</button><button class="${ch==='wa'?'on':''}" data-ob="wa"><span style="color:#1D9A5B">●</span> WhatsApp</button></div>
-      </div>
-    <div class="field ${hot==='tpl'?'hot':''}"><label>Template</label><select data-ob="tpl"><option value="" ${!tpl?'selected':''}>Kies een template</option><option ${tpl==='start_conversation_en'?'selected':''}>start_conversation_en</option><option>(templates in NL, AR, TR: namen te valideren)</option></select><span style="font-size:10.5px;color:var(--m-muted)">WhatsApp conversations can only be started with an approved template.</span></div>
-    <div class="field"><label>Message</label><div class="inp" style="min-height:44px;align-items:flex-start">Hello, this is the Netherlands Red Cross. We would like to get in touch with you about your request. Please reply to this message and one of our team will respond.</div></div>
-    <div class="field ${hot==='num'?'hot':''}"><label>Recipient</label><div style="display:grid;grid-template-columns:120px 1fr;gap:6px"><select><option>Netherlands +31</option></select><input class="crcin" data-ob="num" placeholder="6 12 34 56 78" value="${esc(num)}"></div></div>
-    <div class="field"><label>Send from</label><select><option>Schoolmaaltijden-nummer (070)</option></select></div>
-    <div class="field"><label>Send mode</label><div class="seg"><button class="${mode==='start'?'on':''}" data-ob="start">Start conversation</button><button class="${mode==='notify'?'on':''}" data-ob="notify">Notify only</button></div><span style="font-size:10.5px;color:var(--m-muted)">${mode==='start'?'Reply comes back to you, or the School Meals queue if you\'re unavailable.':'Reply goes to the queue.'}</span></div>
-    <div style="text-align:right"><button class="redbtn ${hot==='send'?'hot':''}" data-ob="send">${sent?'✓ Sent':'Send message'}</button></div>
-  </div>
-  <div class="box"><b style="font-size:13px">Preferred Language</b><div style="color:var(--m-muted);margin-bottom:6px">Clear a customer's saved language so they're asked to choose again on their next contact.</div>
-    <div class="seg" style="margin-bottom:6px"><button class="on">Phone number</button><button>Profile ID</button></div>
-    <div style="display:grid;grid-template-columns:120px 1fr;gap:6px;margin-bottom:6px"><select><option>Netherlands +31</option></select><input class="crcin" data-ob="langnum" placeholder="6 12 34 56 78"></div>
-    <button class="redbtn" data-ob="reset">Reset Preferred Language</button></div>
-  </div>`;
+  const msg='Hello, this is the Netherlands Red Cross. We would like to get in touch with you about your request. Please reply to this message and one of our team will respond.';
+  return `<div class="crv-ob" style="color:#1B1B24;font-size:12px"><div class="crv-obh">✚ <b>Rode Kruis</b></div><div class="crv-obg">
+    <div class="crv-obbox"><b>Outbound Messaging</b><small>Send an SMS or WhatsApp to someone.</small>
+      <small style="margin-top:6px"><b>Channel</b></small><div class="crv-seg"><span data-ob="sms">● SMS</span><span class="on wa">● WhatsApp</span></div>
+      <small><b>Template</b></small><div class="${hot==='tpl'?'hot':''}"><select data-ob="tpl"><option value="" ${!tpl?'selected':''}>Select a template</option><option ${tpl==='start_conversation_en'?'selected':''}>start_conversation_en</option></select></div><small class="muted">WhatsApp conversations can only be started with an approved template.</small>
+      <small><b>Message</b></small><div class="crv-in2 ta">${tpl?msg:''}</div>
+      <small><b>Recipient</b></small><div class="crv-f2b ${hot==='num'?'hot':''}"><span>Netherlands +31 ▾</span><input data-ob="num" placeholder="6 12 34 56 78" value="${esc(num)}"></div>
+      <small><b>Send from</b></small><div class="crv-in2 dd">${OB_SENDFROM} <span>▾</span></div>
+      <small><b>Send mode</b></small><div class="crv-seg"><span data-ob="start" class="${mode==='start'?'on':''}">Start conversation</span><span data-ob="notify" class="${mode==='notify'?'on':''}">Notify only</span></div><small class="muted">${mode==='start'?'Reply comes back to you, or the School Meals queue if you\'re unavailable.':'Reply goes to the queue.'}</small>
+      ${sent?`<div class="crv-okbar">✓ Conversation started with +31${String(num).replace(/\s/g,'')}. It is queued for an agent.</div>`:''}
+      <div style="text-align:right"><span class="crv-redb ${hot==='send'?'hot':''}" data-ob="send">Send message</span></div></div>
+    <div class="crv-obbox"><b>Outbound Caller ID</b><small>Select the number people see on their phones when you call them.</small><span class="muted">...</span>
+      <b style="margin-top:8px">Preferred Language</b><small>Clear a customer's saved language so they're asked to choose again on their next contact.</small>
+      <small style="margin-top:6px"><b>Look up by</b></small><div class="crv-seg"><span class="on">Phone number</span><span>Profile ID</span></div>
+      <small><b>Customer phone number</b></small><div class="crv-f2b"><span>Netherlands +31 ▾</span><input data-ob="langnum" placeholder="6 12 34 56 78"></div>
+      <div><span class="crv-redb" data-ob="reset">Reset Preferred Language</span></div></div>
+  </div></div>`;
 }
 function settingsPanel(){
   return `<div class="settings"><div style="display:flex;justify-content:space-between"><b style="font-size:14px">Settings</b><button class="mini" data-act="gear">✕</button></div>
@@ -1187,7 +1200,7 @@ function settingsPanel(){
 function rlRemind(inner){ return `<details class="rl-remind" data-rlwrap><summary>${ic('redo')} <span><b>Even herinneren: zo ging het in Redline</b><small>Ken je al. Open dit als je het verschil wilt zien.</small></span><i class="chev">${ic('down')}</i></summary><div class="rl-remind-b">${inner}</div></details>`; }
 function crFirstBlock(rows, crviz, rlvizHtml){
   const cr = rows.map(r=>`<div class="crfirst-row"><b>${esc(r.topic)}</b><p>${r.crc}</p></div>`).join('');
-  const rl = rows.map(r=>`<div style="margin-bottom:10px"><b>${esc(r.topic)}</b>${r.redline??HANNAH()}</div>`).join('');
+  const rl = rows.map(r=>`<div style="margin-bottom:10px;display:grid;gap:4px"><b>${esc(r.topic)}</b><div>${r.redline??HANNAH()}</div></div>`).join('');
   return `<div class="crfirst"><h3 class="crfirst-ti">${rows.length===1?esc(rows[0].topic):'Wat is anders'}</h3>${rows.length===1?`<p class="crfirst-t">${rows[0].crc}</p>`:cr}${(crviz||[]).map(k=>`<div data-crviz="${k}" style="margin-top:14px"></div>`).join('')}</div>${rlRemind(rl+(rlvizHtml||''))}`;
 }
 function compareBlock(rows){
@@ -1504,10 +1517,7 @@ function mountRLQueue(el){
 const OPEN = [
   // Pronetx
   {id:'p-gemist-tijd', who:'Pronetx', mod:'gesprek-krijgen', text:'Hoeveel seconden heb je om een contact aan te nemen voordat het als gemist geldt? Nu 20 seconden; misschien wordt dit langer.'},
-  {id:'p-bijlagen', who:'Pronetx', mod:'whatsapp', text:'Bijlagen: blijven ze 24 uur beschikbaar? Welke bestandstypes en welke maximale grootte?'},
-  {id:'p-tabs', who:'Pronetx', mod:'werkplek', text:'Welke tabs zien agents echt (Performance, Worklist)?'},
   {id:'p-acw-tijd', who:'Pronetx', mod:'afronden', text:'Maximale After Call Work-tijd per kanaal (bellen, WhatsApp).'},
-  {id:'p-outbound-routing', who:'Pronetx', mod:'outbound', text:'Telt een uitgaand gesprek mee voor de volgorde waarin je inkomende gesprekken krijgt?'},
   {id:'p-schermteksten', who:'Pronetx', mod:'gesprek-krijgen', text:'Exacte schermteksten van statussen die we nog niet op een screenshot hebben gezien (bijvoorbeeld de status na een gemist contact en tijdens After Call Work). In de mockups staan ze in het Nederlands.'},
   {id:'p-ar-tr-warn', who:'Pronetx', mod:'reis-pa', text:'Tekst van de waarschuwing bij Arabisch en Turks ("mogelijk wordt u in het Engels geholpen") staat niet in de Prompts-Excel.'},
   {id:'p-accept-call', who:'Pronetx', mod:'callbacks', text:'Wanneer hoort de PA de prompt Callback_Accept_Call ("Uw terugbelafspraak wordt elk moment gestart...")? In de Excel staat "When will this be used".'},
@@ -1517,15 +1527,10 @@ const OPEN = [
   {id:'h-redline', who:'Hannah', mod:'verandert', text:'Hoe werkte dit in Redline? (voor alle vergelijkingen Redline ↔ ContactRC)'},
   {id:'h-beter', who:'Hannah', mod:'verandert', text:'Wat wordt er nog meer beter met ContactRC?'},
   {id:'h-alle-contacten', who:'Hannah', mod:'rollen', text:'Zien agents alle contacten, of alleen hun eigen? (wens: alle)'},
-  {id:'h-profiel', who:'Hannah', mod:'werkwijze', text:'Wat mag er wel en niet in het klantprofiel? (eerder afgesproken: alleen de naam)'},
-  {id:'h-voicemail', who:'Hannah', mod:'callbacks', text:'Werkafspraak: welke tekst spreek je in op een voicemail?'},
   {id:'p-nood-chat', who:'Pronetx', mod:'manager', text:'Welk bericht krijgt een PA op WhatsApp als de noodsluiting aan staat?'},
-  {id:'h-templates', who:'Hannah', mod:'rollen', text:'Maken agents zelf message templates, of doet een manager of admin dat?'},
-  {id:'h-worklist', who:'Hannah', mod:'werkplek', text:'Waarvoor gebruiken agents de Worklist?'},
   {id:'h-openingstijden-wie', who:'Hannah', mod:'manager', text:'Wie stelt openingstijden en feestdagen vooraf in?'},
   // Overig
   {id:'o-rechten', who:'Overig', mod:'manager', text:'Definitieve rechten van manager en admin.'},
-  {id:'o-transfer-gif', who:'Overig', mod:'transfer', text:'Screenshot of gif van persoonlijk doorverbinden (warm transfer) aanleveren (placeholder in module Persoonlijk doorverbinden).'},
   {id:'o-cb2', who:'Overig', mod:'callbacks', text:'Voorlopige prompttekst voor callback-keuze 2: "Wilt u uw terugbelverzoek houden? Toets dan 2." Ontbreekt in de Excel.'},
   {id:'o-verschillenlijst', who:'Overig', mod:'verandert', text:'Bijlage "Verschillenlijst Redline-Amazon Connect.docx" stond niet in het project. Module "Wat verandert er" is gebouwd op de onderwerpen uit de opdracht.'},
   {id:'o-training-link', who:'Overig', mod:'', text:'Enablement Guide: de link bij Amazon Connect Agent Performance Evaluations is dezelfde als bij Amazon Connect Administration. Juiste link navragen bij AWS (pagina Meer training).'},
@@ -1641,9 +1646,9 @@ const CRC_TRANSFER_CALL = 'Klik op Quick connect, kies een collega of taalqueue 
 
 /* Planning uit het draaiboek en de opdracht */
 const PLAN = [
-  {d:'di 13 okt', iso:'2026-10-13', w:'Training managers en supervisors', det:'Online via Teams, 10:30 - 12:00.'},
-  {d:'do 15 okt', iso:'2026-10-15', w:'Training agents, blok 1', det:'Online via Teams, 10:00 - 12:00. Hannah deelt je in voor blok 1, 2 of 3.'},
-  {d:'ma 19 okt', iso:'2026-10-19', w:'Training agents, blok 2 en 3', det:'Blok 2: 10:00 - 12:00. Blok 3: 13:00 - 15:00. Online via Teams.'},
+  {d:'di 13 okt', iso:'2026-10-13', w:'Training managers en supervisors', det:'Op kantoor, 10:30 - 12:00.'},
+  {d:'do 15 okt', iso:'2026-10-15', w:'Training agents, blok 1', det:'Op kantoor, 10:00 - 12:00. Hannah deelt je in voor blok 1, 2 of 3.'},
+  {d:'ma 19 okt', iso:'2026-10-19', w:'Training agents, blok 2 en 3', det:'Blok 2: 10:00 - 12:00. Blok 3: 13:00 - 15:00. Op kantoor.'},
   {d:'vanaf 19 okt', iso:'2026-10-19', w:'Redline stuurt het nieuwe nummer mee', det:'<p>Sluit je een chat af in Redline, dan krijgt de PA automatisch een bericht met het nieuwe nummer dat vanaf 4 november in gebruik is. Zo ziet de PA dat in WhatsApp:</p><div style="margin-top:6px">'+phoneWA({msgs:[{k:'day',text:'Vandaag'},{from:'pa',text:'Dank u wel voor uw hulp!',t:'14:31'},{from:'ag',text:'Graag gedaan. Fijne dag!',t:'14:32'},{from:'ag',text:CLOSE_MSG,t:'14:33'}]})+'</div>'},
   {d:'di 27 okt', iso:'2026-10-27', w:'Simulatie in ContactRC', det:'Een sessie van 2 uur in het echte ContactRC. De ene groep speelt de hulpvrager (PA), de andere groep de agent. Zo oefen je alles nog een keer vlak voor de livegang.'},
   {d:'ma 2 nov', iso:'2026-11-02', w:'Check: werkt je inlog?', det:'Iedereen logt die dag in op ContactRC om te controleren dat het werkt. Weet je niet meer precies hoe? Kijk in de module <a href="#inloggen">4. Inloggen</a>. Lukt het niet? Meld het meteen bij Hannah of Laura.'},
@@ -1663,8 +1668,9 @@ const PLAN = [
     '<div class="callout" style="margin-top:4px">'+ic('users')+'<div><b>Hulp naast je</b><br>Ook vandaag zitten Caylent en 510 bij jullie in de ruimte.</div></div>'},
   {d:'vr 6 nov', iso:'2026-11-06', w:'Laatste dag Redline (online)', det:'Deze dag werken we online. Het is de laatste dag dat een team nog in Redline werkt om de laatste chats en gesprekken daar af te handelen. Problemen meld je zoals altijd in de '+HC+'.'},
   {d:'ma 9 nov', iso:'2026-11-09', w:'Iedereen werkt in ContactRC', key:true, det:'Vanaf nu werkt het hele team in ContactRC.'},
+  {d:'vr 27 nov', iso:'2026-11-27', w:'Korte vragenlijst (SUS), eerste keer', det:'<p>Je werkt dan 2 weken met ContactRC. Je krijgt een korte vragenlijst met 10 stellingen over hoe makkelijk ContactRC is in gebruik (System Usability Scale, SUS). De stellingen zie je bij januari 2027: dan krijg je dezelfde vragenlijst nog een keer.</p>'},
   {d:'tot vr 4 dec', iso:'2026-12-04', w:'Hypercare-chat', det:'Tot en met 4 december meld je problemen in de '+HC+'. Daarna gaat alles via Hannah of Laura.'},
-  {d:'januari 2027', iso:'2027-01-04', w:'Korte vragenlijst (SUS)', det:'<p>Je krijgt een korte vragenlijst met 10 stellingen over hoe makkelijk ContactRC is in gebruik, nu je er al een tijd mee werkt (System Usability Scale, SUS). Daarna volgt eventueel een kort interview.</p><p>Bij elke stelling kies je een score van <b>1 (helemaal oneens)</b> tot <b>5 (helemaal eens)</b>. Dit zijn de stellingen:</p><ol style="margin:0;padding-left:1.3em;display:grid;gap:4px"><li>Ik wil ContactRC graag regelmatig gebruiken.</li><li>Ik vind ContactRC onnodig complex.</li><li>Ik vind ContactRC makkelijk te gebruiken.</li><li>Ik denk dat ik hulp van een technisch persoon nodig heb om ContactRC te kunnen gebruiken.</li><li>Ik vind dat de verschillende functies van ContactRC goed op elkaar aansluiten.</li><li>Ik vind dat er te veel inconsistenties in ContactRC zitten.</li><li>Ik denk dat de meeste mensen heel snel leren om ContactRC te gebruiken.</li><li>Ik vind ContactRC erg omslachtig in gebruik.</li><li>Ik voel me erg zeker als ik ContactRC gebruik.</li><li>Ik moest veel leren voordat ik met ContactRC aan de slag kon.</li></ol>'},
+  {d:'januari 2027', iso:'2027-01-04', w:'Korte vragenlijst (SUS), tweede keer', det:'<p>Je krijgt de korte vragenlijst met 10 stellingen (System Usability Scale, SUS) nog een keer, nu je er al een tijd mee werkt. Daarna volgt eventueel een kort interview.</p><p>Bij elke stelling kies je een score van <b>1 (helemaal oneens)</b> tot <b>5 (helemaal eens)</b>. Dit zijn de stellingen:</p><ol style="margin:0;padding-left:1.3em;display:grid;gap:4px"><li>Ik wil ContactRC graag regelmatig gebruiken.</li><li>Ik vind ContactRC onnodig complex.</li><li>Ik vind ContactRC makkelijk te gebruiken.</li><li>Ik denk dat ik hulp van een technisch persoon nodig heb om ContactRC te kunnen gebruiken.</li><li>Ik vind dat de verschillende functies van ContactRC goed op elkaar aansluiten.</li><li>Ik vind dat er te veel inconsistenties in ContactRC zitten.</li><li>Ik denk dat de meeste mensen heel snel leren om ContactRC te gebruiken.</li><li>Ik vind ContactRC erg omslachtig in gebruik.</li><li>Ik voel me erg zeker als ik ContactRC gebruik.</li><li>Ik moest veel leren voordat ik met ContactRC aan de slag kon.</li></ol>'},
 ];
 
 /* ===================== Visualisaties: zo gaat het in ContactRC (op basis van schermafdrukken) ===================== */
@@ -1889,7 +1895,7 @@ function crvChatWin({msgs=[], hotType=false, hotClip=false, typed='', preview=nu
     <div class="crv-chathead">${ic('chat')} ${CRV_NR}<small>${ic('clock')} 05:13</small><span>Connected chat</span></div>
     <div class="crv-msgs" style="position:relative"><p class="crv-sys">WhatsApp chat started with ${CRV_NR}</p>${msgs.map(m).join('')}
     ${preview?`<div class="crv-prev hot"><div class="row" style="justify-content:space-between;gap:6px"><b>${preview.name}</b><small>${preview.size}</small><span>⧉ ✕</span></div><div class="crv-previmg"><img src="${LOGO.icon}" alt=""><span>Voorbeeldafbeelding</span></div><div class="crv-thumbs"><span>IMG<br><small>logo.jpg</small></span><span class="on">IMG<br><small>foto.jpeg</small></span></div><div class="crv-track">ⓘ <b>Downloads are tracked</b><br>Your name and the time will be saved to the audit log so admins can see who accessed it.</div><span class="crv-pbtn">${ic('download')} Download</span></div>`:''}</div>
-    <div class="crv-clip ${hotClip?'hot':''}">📎</div>
+    <div class="crv-clip"><span class="${hotClip?'hot':''}">📎</span><span class="crv-qri">✦</span></div>
     <div class="crv-type ${hotType?'hot':''}">${typed?`<span style="color:#1B1B24">${typed}</span>`:'Type a message and press enter to send'} <span style="float:right">➤</span></div>
     <div class="crv-actions"><span class="crv-qr">${ic('chat')}</span><span class="crv-end ${hotEnd?'hot':''}">✕ End chat</span></div>${confirm?crvConfirm():''}`;
   return crvShell({left, right:crvProfile({}), wide});
@@ -1905,6 +1911,27 @@ CRV.chat = { title:'Zo werk je in het chatvenster van ContactRC', steps:[
   {t:'Klaar met de chat? Klik onderaan op <b>End chat</b>.', act:true, h:()=>crvChatWin({msgs:[...CW_BASE,{who:'pa',t:'Dank u wel!',time:'6:30 PM'}], hotEnd:true})},
   {t:'Bevestig met <b>End chat</b>.', act:true, h:()=>crvChatWin({msgs:[...CW_BASE,{who:'pa',t:'Dank u wel!',time:'6:30 PM'}], confirm:true})},
   {t:'De chat gaat naar <i>After chat work</i>. Rechts kies je de labels. Hoe dat gaat, zie je bij After Call Work.', h:()=>acwShell(crvAcwLeft({timer:'00:00:01'}), crvDispo({}))},
+]};
+
+/* ---------- Quick responses (op basis van schermafdrukken) ---------- */
+const QRS=[['/begroet','Goedemiddag, u spreekt met [je naam] van Programma Schoolmaaltijden. Waarmee kan ik u helpen?'],['/postcode','Mag ik uw postcode en huisnummer?'],['/visa','Uw VISA-kaart wordt binnen 5 werkdagen verstuurd. (voorbeeld)'],['/afsluit','Kan ik u nog ergens anders mee helpen?']];
+function crvQrChat({list=false, hotIcon=false, hotItem=-1, typed='', hotSend=false, sent=''}={}){
+  const left = crvTop()+`<div class="crv-card"><span>${ic('chat')} ${CRV_NR}</span><small>${ic('clock')} 00:00:23<br>${ic('clock')} 00:00:00</small></div>
+    <div class="crv-chathead">${ic('chat')} ${CRV_NR}<small>${ic('clock')} 00:24</small><span>Connected chat</span></div>
+    <div class="crv-msgs"><p class="crv-sys">WhatsApp chat started with ${CRV_NR}</p><div class="crv-m"><small>SYSTEM_MESSAGE</small><div>School Meals - Dutch</div></div><div class="crv-m"><small>${CRV_NR}</small><div>Hallo, ik heb een vraag over mijn kaart.</div></div>${sent?`<div class="crv-m wag hot"><small>Voorbeeld agent</small><div>${esc(sent)}</div><em class="crv-st">✓ Delivered</em></div>`:''}</div>
+    ${list?`<div class="crv-qrl">${QRS.map((q,i)=>`<div data-qri="${i}" class="clk ${hotItem===i?'hot':''}"><b>${q[0]}</b><span>${esc(q[1])}</span></div>`).join('')}</div>`:''}
+    <div class="crv-clip"><span>📎</span><span class="crv-qri ${hotIcon?'hot':''}" data-qric>✦</span></div>
+    <div class="crv-type crv-qrt"><span style="${typed?'color:#1B1B24':''}">${typed?esc(typed):list?'/#type here to search for quick responses':'Type a message and press enter to send'}</span><span class="crv-qrs ${typed?'on':''} ${hotSend?'hot':''}" data-qrsend>➤</span></div>
+    <div class="crv-actions"><span class="crv-qr">${ic('users')}</span><span class="crv-end">✕ End chat</span></div>`;
+  return crvShell({left, right:crvProfile({})});
+}
+CRV.quickResp = { title:'Zo gebruik je een quick response', steps:[
+  {t:'Een <b>quick response</b> is een vast antwoord dat je snel in de chat zet. Wil je een eigen quick response? Geef de tekst en de <b>shortcut</b> die je wilt gebruiken door aan je supervisor. Je supervisor maakt hem aan.', h:()=>crvQrChat({})},
+  {t:'Klik in de chat op het <b>quick response-icoon</b>, naast de paperclip.', act:true, handle:(e)=>{ if(e.target.closest('[data-qric]')) return 'next'; }, h:()=>crvQrChat({hotIcon:true})},
+  {t:'Boven het typvak opent de lijst met quick responses: links de shortcut, rechts de tekst. Klik op het antwoord dat je wilt gebruiken, bijvoorbeeld <i>/postcode</i>.', act:true, handle:(e,st)=>{ const q=e.target.closest('[data-qri]'); if(q){ st.pick=+q.dataset.qri; return 'next'; } }, h:()=>crvQrChat({list:true, hotItem:1})},
+  {t:'De tekst staat nu in het typvak. Pas hem eventueel aan en klik op het <b>pijltje</b> (of druk op Enter) om te versturen.', act:true, handle:(e)=>{ if(e.target.closest('[data-qrsend]')) return 'next'; }, h:st=>crvQrChat({typed:QRS[st.pick??1][1], hotSend:true})},
+  {t:'Je bericht staat in de chat.', h:st=>crvQrChat({sent:QRS[st.pick??1][1]})},
+  {t:'Het kan ook sneller: typ de <b>shortcut</b> in het typvak, bijvoorbeeld <i>/postcode</i>. Het antwoord verschijnt dan vanzelf in het typvak. Klik op het pijltje om te versturen.', h:()=>crvQrChat({typed:QRS[1][1], hotSend:true})},
 ]};
 
 /* ---------- Doorverbinden van een chat via Quick connects (op basis van schermafdrukken) ---------- */
@@ -2253,12 +2280,13 @@ const CHANGES = [
   {k:'outbound', t:'Outbound bellen', i:'phoneOut', rmode:'outcall', rhtml:()=>REDLINE_OUTCALL, c:'Uitbellen via de Number pad. Typ het nummer altijd met landcode, bijvoorbeeld +31. De PA ziet het nummer van Schoolmaaltijden.'},
   {k:'outbound', t:'Outbound berichten', i:'send', rmode:'out', rhtml:()=>REDLINE_OUTBOUND, c:'Een WhatsApp-template stuur je via de outbound messaging app (tab NLRC Outbound... of via Apps). Daar kies je template, nummer en modus. Kanaal is altijd WhatsApp. Sluit je een WhatsApp-gesprek af dat jij zelf bent begonnen, dan komt er geen After Call Work.'},
   {k:'callbacks', t:'Callbacks (terugbellen)', i:'phoneOut', rmode:'none', rhtml:()=>'<p>Callbacks hebben in Redline nooit goed gewerkt. Voor Schoolmaaltijden was deze optie daarom niet beschikbaar.</p>', c:'Is er geen agent beschikbaar, dan loopt de wachttijd op. Bij 4 minuten wachttijd kan de beller kiezen om teruggebeld te worden (niet in het laatste uur voor sluiting). De callback vindt 3 minuten later plaats, of zodra de PA aan de beurt is in de wachtrij: de PA houdt zijn plek in de wachtrij. Een callback komt bij jou binnen als een gewoon inkomend gesprek. Het systeem belt de PA daarna automatisch.'},
+  {k:'whatsapp', t:'Quick responses', i:'chats', rmode:'none', rhtml:()=>'<p>Quick responses zijn nieuw in ContactRC.</p>', c:'Vaste antwoorden zet je met één klik in de chat: klik op het quick response-icoon naast de paperclip, of typ de shortcut. Wil je een eigen quick response? Geef de tekst en de shortcut door aan je supervisor. Je supervisor maakt hem aan.'},
   {k:'wachtrij', t:'Wachtrij en statistieken', i:'chart', rmode:'queue', rhtml:()=>REDLINE_WACHTRIJ, c:'Via Apps open je het Performance-dashboard. Daar zie je per taalqueue hoeveel contacten er wachten en hoeveel agents op een contact zitten, de status van je collega\'s, en hoeveel contacten je tot nu toe hebt gehad. Klik op de drie puntjes om een tabel groot te maken. Supervisors kunnen via het oogje meekijken met een gesprek of meedoen.'},
 ];
 M({ id:'verandert', group:'start', title:'Wat verandert er', icon:'redo', roles:['agent','manager'], demoInUitleg:true,
   lead:'De belangrijkste verschillen tussen Redline en ContactRC op een rij.',
   uitleg:`<div class="prose"><p>Veel blijft hetzelfde: je werkt nog steeds in EspoCRM en 121, en je helpt PA's via bellen en WhatsApp. Maar een aantal dingen werkt anders. Hieronder zie je per onderwerp kort wat er verandert. De schermen, simulaties en oefeningen vind je in de module die erbij staat.</p>
-  <div class="callout">${ic('spark')}<div><b>Wat er beter wordt</b><ul style="margin:6px 0 0;padding-left:1.1em;display:grid;gap:4px"><li>Openingstijden en feestdagen (zoals kerst) kunnen nu vooraf worden ingesteld.</li><li>Vertaling is duidelijk voor de PA: die ziet altijd de vertaling én het Nederlands (zie de module Taal en vertaaltool).</li><li>Callbacks (terugbellen) zijn nu beschikbaar en werken goed: loopt de wachttijd op tot 4 minuten, dan kan de beller kiezen om teruggebeld te worden (niet in het laatste uur voor sluiting). De PA houdt zijn plek in de wachtrij.</li><li>Persoonlijk doorverbinden (warm transfer): je kunt eerst met je collega overleggen, voordat je de PA met je collega verbindt.</li><li>Supervisors hebben meer tools, zoals uitgebreidere statistieken, en kunnen nummers op een blokkadelijst zetten.</li><li>${ph('Overige punten: aan te vullen door Hannah','','h-beter')}</li></ul></div></div></div>`,
+  <div class="callout">${ic('spark')}<div><b>Wat er beter wordt</b><ul style="margin:6px 0 0;padding-left:1.1em;display:grid;gap:4px"><li>Openingstijden en feestdagen (zoals kerst) kunnen nu vooraf worden ingesteld.</li><li>Vertaling is duidelijk voor de PA: die ziet altijd de vertaling én het Nederlands (zie de module Taal en vertaaltool).</li><li>Callbacks (terugbellen) zijn nu beschikbaar en werken goed: loopt de wachttijd op tot 4 minuten, dan kan de beller kiezen om teruggebeld te worden (niet in het laatste uur voor sluiting). De PA houdt zijn plek in de wachtrij.</li><li>Persoonlijk doorverbinden (warm transfer): je kunt eerst met je collega overleggen, voordat je de PA met je collega verbindt.</li><li><b>Quick responses:</b> vaste antwoorden die je met één klik of met een shortcut in de chat zet (zie de module WhatsApp-chats).</li><li>Supervisors hebben meer tools, zoals uitgebreidere statistieken, en kunnen nummers op een blokkadelijst zetten.</li><li>${ph('Overige punten: aan te vullen door Hannah','','h-beter')}</li></ul></div></div></div>`,
   demo:{ title:'De verschillen per onderwerp', intro:'', mount: el => {
     let open=-1;
     const render=()=>{ el.innerHTML = `<h3 style="margin:0 0 10px">De verschillen per onderwerp</h3><div class="chg-list">${CHANGES.map((c,i)=>{ const mod=MODULES.find(m=>m.id===c.k); const on=open===i;
@@ -2309,7 +2337,7 @@ M({ id:'inloggen', group:'basis', title:'Inloggen', icon:'login', roles:['agent'
         let pane = customerHome();
         if(tab==='121 Platform') pane = iframePane('121 Platform');
         if(tab==='EspoCRM') pane = iframePane('EspoCRM');
-        if(tab==='NLRC Outbound...') pane = obLogged ? outboundPane({}) : `<div class="box center"><b style="color:#E3000F">+ Rode Kruis</b><div>Sign in with Microsoft to continue.</div><button class="redbtn ${s===6?'hot':''}" data-go="7">Login</button></div>`;
+        if(tab==='NLRC Outbound...') pane = obLogged ? outboundPane({}) : `<div class="crv-login" style="color:#1B1B24"><div class="crv-obbox" style="text-align:center;justify-items:center"><b>✚ Rode Kruis</b><small>Sign in with Microsoft to continue.</small><span class="crv-redb ${s===6?'hot':''}" data-go="7" style="cursor:pointer">Login</span></div></div>`;
         body = crc({status, extra: top, tabs, active:tab, pane, lower:`<h5>Number pad <span>✕</span></h5><div class="inp">🇳🇱 ▾ Enter a phone number</div><div class="pad">${[1,2,3,4,5,6,7,8,9,'*',0,'#'].map(x=>`<button>${x}</button>`).join('')}</div>`});
       }
       el.innerHTML = stepsBar() + `<div class="hint ${s===7?'good':miss?'bad':''}">${ic(s===7?'check':miss?'help':'target')}<span>${s<7?'<b>Jouw beurt:</b> ':''}${miss?'Niet helemaal. ':''}${hints[s]}</span></div>` + body + (s===7?`<div style="margin-top:10px"><button class="btn sm ghost" data-reset>${ic('redo')} Nog een keer</button></div>`:'');
@@ -2344,13 +2372,12 @@ const HS = [
   {k:'Customer', t:'Tab Customer', d:'Het klantprofiel van de PA: naam, de taal die de PA in de flow koos en eerdere contacten. Je kunt hier ook profielen zoeken en aanmaken.'},
   {k:'121 Platform', t:'Tab 121 Platform', d:'121 binnen ContactRC. Je logt hier in met je eigen 121-login.'},
   {k:'EspoCRM', t:'Tab EspoCRM', d:'EspoCRM binnen ContactRC. Je werkt hier zoals je gewend bent.'},
-  {k:'Worklist', t:'Tab Worklist', d:'Een lijst met contacten die je aan jezelf kunt toewijzen (Assign to me). Waarvoor agents de Worklist gebruiken: '+tv('h-worklist')},
   {k:'NLRC Outbound...', t:'Outbound messaging app', d:'Hier stuur je een WhatsApp-template naar een PA, en reset je de taal van een PA. Staat deze tab er niet? Open de app dan via <b>Apps</b> rechtsboven.'},
   {k:'apps', t:'Knop Apps', d:'Tab per ongeluk gesloten? Via <b>Apps</b> haal je hem terug.'},
 ];
 M({ id:'werkplek', group:'basis', title:'Je werkplek', icon:'layout', roles:['agent','manager'],
   lead:'Alles wat je op je scherm ziet, en hoe je je headset instelt.',
-  uitleg:`<div class="prose"><p>De Agent workspace heeft twee delen. <b>Links</b> het belpaneel: je status, het tandwiel voor instellingen, Quick connects en de Number pad. Hier verschijnen ook binnenkomende gesprekken en chats. <b>Rechts</b> de tabs: Customer, 121 Platform, EspoCRM, Worklist en de outbound messaging app. Welke tabs agents precies zien: ${tv('p-tabs')}</p>
+  uitleg:`<div class="prose"><p>De Agent workspace heeft twee delen. <b>Links</b> het belpaneel: je status, het tandwiel voor instellingen, Quick connects en de Number pad. Hier verschijnen ook binnenkomende gesprekken en chats. <b>Rechts</b> de tabs: Customer, 121 Platform, EspoCRM en de outbound messaging app.</p>
   <p><b>Tip:</b> je kunt de scheidingslijn tussen het belpaneel en de tabs verslepen, zodat het belpaneel breder of smaller wordt.</p>
   <div class="callout">${ic('head')}<div><b>Headset en geluid</b><ul style="margin:6px 0 0;padding-left:1.1em;display:grid;gap:4px"><li>Kies speaker, microfoon en ringer via het tandwiel: <b>Settings > Audio devices</b>.</li><li>Je browser moet toegang hebben tot je microfoon.</li><li>De instellingen worden in de browser bewaard. Werk je op een andere computer of in een andere browser, stel ze dan opnieuw in.</li><li>Het belsignaal (ringer) staat voor bellen en chats tegelijk aan of tegelijk uit. Alleen voor chats uitzetten kan niet.</li><li><b>Tip:</b> zet de ringer op je laptopspeaker en het gesprek op je headset. Dan hoor je een nieuw contact ook als je headset af ligt.</li></ul></div></div>
   <p class="muted" style="font-size:.88rem">De schermen in deze training zijn nagebouwd en kunnen iets afwijken van het echte ContactRC. Echte schermteksten zijn in het Engels.</p></div>`,
@@ -2358,7 +2385,7 @@ M({ id:'werkplek', group:'basis', title:'Je werkplek', icon:'layout', roles:['ag
     let cur=null, seen=new Set(), tab='Customer', gear=false;
     const render=()=>{
       const h = HS.find(x=>x.k===cur);
-      const tabs=['Customer','121 Platform','EspoCRM','Worklist','NLRC Outbound...'];
+      const tabs=['Customer','121 Platform','EspoCRM','NLRC Outbound...'];
       const padLower=`<h5>Number pad <span>✕</span></h5><div class="inp">🇳🇱 ▾ Enter a phone number</div><div class="pad">${[1,2,3,4,5,6,7,8,9,'*',0,'#'].map(x=>`<button>${x}</button>`).join('')}</div>`;
       const mock = crc({tabs, active:tab, pane:tab==='Customer'?customerHome():iframePane(tab), extra: gear?settingsPanel():'', lower: cur==='numpad'?padLower:quickConnects(), plain:true, padOpen:cur==='numpad'});
       el.innerHTML = `<div class="stage"><div class="hs">${mock}</div><div style="display:grid;gap:8px;align-content:start">
@@ -2376,7 +2403,7 @@ M({ id:'werkplek', group:'basis', title:'Je werkplek', icon:'layout', roles:['ag
       if(cur && tabs.includes(cur)) { const t=$$('.tabs .t',el).find(b=>b.dataset.tab===cur); t&&t.classList.add('hot'); }
     };
     el.addEventListener('click',e=>{
-      const b=e.target.closest('[data-hs]'); if(b){ cur=b.dataset.hs; seen.add(cur); if(HS.find(x=>x.k===cur) && ['Customer','121 Platform','EspoCRM','Worklist','NLRC Outbound...'].includes(cur)) tab=cur; gear = cur==='gear'; render(); return; }
+      const b=e.target.closest('[data-hs]'); if(b){ cur=b.dataset.hs; seen.add(cur); if(HS.find(x=>x.k===cur) && ['Customer','121 Platform','EspoCRM','NLRC Outbound...'].includes(cur)) tab=cur; gear = cur==='gear'; render(); return; }
       const a=e.target.closest('[data-act]')?.dataset.act; const t=e.target.closest('[data-tab]')?.dataset.tab;
       if(t){ tab=t; cur=t; seen.add(t); gear=false; render(); return; }
       if(a==='gear'||a==='savesettings'){ gear=!gear && a==='gear'; cur='gear'; seen.add('gear'); render(); return; }
@@ -2407,15 +2434,15 @@ M({ id:'werkplek', group:'basis', title:'Je werkplek', icon:'layout', roles:['ag
 });
 
 /* 6. Rollen */
-const CAN = ['Gesprekken en chats aannemen','Doorverbinden','Beëindigen (met een bevestigingsvraag, tegen per ongeluk ophangen)','Naar elk nummer uitbellen via de computer','Contacten terugzoeken','Transcripts, samenvattingen en opnames bekijken en beluisteren','Klantprofielen zoeken, aanmaken en bewerken','Zelf message templates maken '+tv('h-templates','te valideren'),'Tags toevoegen','Bestanden bijvoegen','Wachtrijcijfers zien'];
+const CAN = ['Gesprekken en chats aannemen','Doorverbinden','Beëindigen (met een bevestigingsvraag, tegen per ongeluk ophangen)','Naar elk nummer uitbellen via de computer','Contacten terugzoeken','Transcripts, samenvattingen en opnames bekijken en beluisteren','Klantprofielen zoeken, aanmaken en bewerken','Tags toevoegen','Bestanden bijvoegen','Wachtrijcijfers zien'];
 const CANNOT = ['Opnames of transcripts downloaden','Iets verwijderen','Meeluisteren met collega\'s','Rapportages en dashboards zien','Instellingen wijzigen'];
 M({ id:'rollen', group:'basis', title:'Rollen', icon:'users', roles:['agent','manager'],
   lead:'Agent, manager en admin: wie kan wat?',
   uitleg:`<div class="prose"><p>ContactRC kent drie rollen. Je rol bepaalt wat je ziet en wat je kunt doen.</p></div>
   <div class="grid3" style="margin-top:14px">
     <div class="card flat"><h3 style="display:flex;gap:8px;align-items:center">${ic('head')} Agent</h3><p class="muted" style="margin-top:6px">Helpt PA's via bellen en WhatsApp.</p></div>
-    <div class="card flat"><h3 style="display:flex;gap:8px;align-items:center">${ic('chart')} Manager</h3><p class="muted" style="margin-top:6px">Stuurt het team aan en ziet cijfers en rapportages. ${tv('o-rechten','rechten nog niet definitief')}</p></div>
-    <div class="card flat"><h3 style="display:flex;gap:8px;align-items:center">${ic('gear')} Admin</h3><p class="muted" style="margin-top:6px">Beheert het systeem en de instellingen. ${tv('o-rechten','rechten nog niet definitief')}</p></div>
+    <div class="card flat"><h3 style="display:flex;gap:8px;align-items:center">${ic('chart')} Manager</h3><p class="muted" style="margin-top:6px">Stuurt het team aan en ziet cijfers en rapportages.</p></div>
+    <div class="card flat"><h3 style="display:flex;gap:8px;align-items:center">${ic('gear')} Admin</h3><p class="muted" style="margin-top:6px">Beheert het systeem en de instellingen.</p></div>
   </div>
   <div class="grid2" style="margin-top:14px">
     <div class="card flat"><h3 style="color:var(--ok);display:flex;gap:8px;align-items:center">${ic('check')} Een agent kan</h3><ul style="margin:10px 0 0;padding-left:1.1em;display:grid;gap:5px">${CAN.map(c=>`<li>${c}${c.startsWith('Contacten terugzoeken')?' <span class="muted">(via Contact history in het klantprofiel)</span>':''}</li>`).join('')}</ul></div>
@@ -2443,7 +2470,7 @@ M({ id:'werkwijze', group:'basis', title:'Werkwijze en klantprofiel', icon:'user
     <p>Via <b>Contact history</b> open je ook de <b>Contact details</b> van een eerder contact. Daar luister je de opname terug en lees je het transcript.</p>
     <div class="callout">${ic('info')}<div><b>Oude gesprekken uit Redline gaan niet mee naar ContactRC.</b> In ContactRC zie je alleen contacten vanaf de overstap. Je houdt toegang tot Redline: moet je echt een ouder gesprek terugzoeken, kijk dan daar in de gesprekshistorie.</div></div>
     <p><b>Notities</b> zet je alleen in EspoCRM. Verder werk je in EspoCRM en 121 zoals je gewend bent.</p>
-    <div class="callout warn">${ic('alert')}<div><b>Wat mag er in het klantprofiel?</b> Eerder is afgesproken: alleen de naam. ${tv('h-profiel')}</div></div>
+    <div class="callout warn">${ic('alert')}<div><b>Wat mag er in het klantprofiel?</b> Alleen de naam.</div></div>
   </div>`,
   rlviz:'hist', crviz:['hist','detailsAgent','profiel'],
   compare:[{topic:'Historie van een PA terugvinden', redline:REDLINE_HISTORIE, crc:'In het klantprofiel (tab Customer) zie je bij Contact history de eerdere contacten van de PA. Via Contact details luister je de opname terug en lees je het transcript. Let op: de gesprekken uit Redline gaan niet mee. Die zoek je, als het echt nodig is, op in Redline zelf: daar houd je toegang toe.'}],
@@ -2809,8 +2836,7 @@ M({ id:'transfer', group:'agent', title:'Persoonlijk doorverbinden', icon:'fwd',
   <li>Ben jij uit het gesprek, dan start After call work: je ziet het transcript met een AI-samenvatting, en je kiest het label.</li>
   <li>Je collega krijgt na het gesprek <b>ook een disposition form</b>. ${tv('p-dispo-overschrijven','te valideren: worden jouw labels overschreven als je collega het formulier invult?')}</li></ol>
   <div class="callout">${ic('chats')}<div><b>Bij een chat kies je zelf:</b><ul style="margin:6px 0 0;padding-left:1.1em;display:grid;gap:4px"><li><b>Transfer</b>: de chat gaat direct door en jij bent meteen uit de chat.</li><li><b>Add to chat</b>: er start een chat met z'n drieën (de PA, jij en je collega). Daarna stap je zelf uit.</li><li>Je kunt ook doorverbinden naar collega's die op dat moment <b>offline</b> zijn. Let op: dat is niet altijd handig. Heb je de chat verstuurd, dan kun je hem niet makkelijk terughalen.</li></ul></div></div>
-  <div class="callout">${ic('info')}<div><b>Stap je er eerder uit?</b> Dan blijft de PA wachten tot de collega beschikbaar is. Een doorverbonden gesprek krijgt altijd voorrang op alle wachtende gesprekken. Je collega kan zijn of haar lopende gesprek nog afmaken, maar het eerstvolgende contact is het doorverbonden gesprek: zodra je collega beschikbaar is (lopend gesprek afgerond, uit Gemist, of After Call Work afgerond), gaat het bij hem of haar over.</div></div>
-  ${ph('Screenshot of gif van persoonlijk doorverbinden','Wordt nog aangeleverd.','o-transfer-gif')}</div>`,
+  <div class="callout">${ic('info')}<div><b>Stap je er eerder uit?</b> Dan blijft de PA wachten tot de collega beschikbaar is. Een doorverbonden gesprek krijgt altijd voorrang op alle wachtende gesprekken. Je collega kan zijn of haar lopende gesprek nog afmaken, maar het eerstvolgende contact is het doorverbonden gesprek: zodra je collega beschikbaar is (lopend gesprek afgerond, uit Gemist, of After Call Work afgerond), gaat het bij hem of haar over.</div></div></div>`,
   compare:[{topic:'Doorverbinden van een chat (WhatsApp)', redline:REDLINE_TRANSFER, crc:CRC_TRANSFER_CHAT},{topic:'Doorverbinden van een gesprek (bellen)', redline:REDLINE_TRANSFER_CALL, crc:CRC_TRANSFER_CALL}],
   demo:{ title:'Simulatie: verbind de PA door', intro:'Kies of je collega vrij of bezet is, en doorloop de transfer.', mount: el => {
     let busy=false, s=0, qc=false, target='Collega (voorbeeld)';
@@ -2873,8 +2899,8 @@ M({ id:'callbacks', crview:{ title:'Zo komt een callback binnen', intro:'Klik do
     <li>Je hoort eerst een <b>whisper</b>: een notificatiegeluid en "Callback for [queue inclusief taal]". Daarna <b>belt het systeem automatisch de PA</b>.</li>
     <li>Neemt de PA niet op? Dan probeert het systeem het <b>na 5 minuten nog 1 keer</b>.</li>
     <li>Jij kunt een callback <b>niet annuleren</b>. Alleen de PA kan dat, door opnieuw te bellen.</li></ul>
-    <div class="callout warn big">${ic('vm')}<div><b>Let op de voicemail</b><br>Het systeem hoort het verschil niet tussen de PA en een voicemail. Neemt de voicemail op, dan denkt het systeem dat het gesprek gelukt is. <b>Er komt dan geen tweede poging.</b> Hoor je dat de voicemail gaat opnemen? <b>Hang op vóórdat de voicemail opneemt.</b> Krijg je toch de voicemail, spreek dan wel een bericht in. ${tv('h-voicemail','tekst: werkafspraak Hannah')}</div></div></div>`,
-  compare:[{topic:'Callbacks', redline:'Callbacks hebben in Redline nooit goed gewerkt. Voor Schoolmaaltijden was deze optie daarom niet beschikbaar.', crc:'Callback komt binnen als gewoon gesprek, met eerst een whisper. Het systeem belt de PA. Geen gehoor: na 5 minuten nog 1 poging.'}],
+    <div class="callout warn big">${ic('vm')}<div><b>Let op de voicemail</b><br>Het systeem hoort het verschil niet tussen de PA en een voicemail. Neemt de voicemail op, dan denkt het systeem dat het gesprek gelukt is. <b>Er komt dan geen tweede poging.</b> Hoor je dat de voicemail gaat opnemen? <b>Hang op vóórdat de voicemail opneemt.</b> Krijg je toch de voicemail, spreek dan wel een bericht in.</div></div></div>`,
+  compare:[{topic:'Callbacks', redline:'<p>Callbacks hebben in Redline nooit goed gewerkt. Voor Schoolmaaltijden was deze optie daarom niet beschikbaar.</p>', crc:'Callback komt binnen als gewoon gesprek, met eerst een whisper. Het systeem belt de PA. Geen gehoor: na 5 minuten nog 1 poging.'}],
   demo:{ title:'Simulatie: twee sporen', intro:'Kies wat er gebeurt als het systeem de PA belt.', mount: el => {
     let track='pa', s=0, t=null, left=6;
     const stop=()=>{clearInterval(t);t=null;};
@@ -2932,12 +2958,14 @@ const QR = [
   {c:'afsluiten-nl', n:'Afsluiten (NL)', t:'Kan ik u nog ergens anders mee helpen?'},
 ];
 M({ id:'whatsapp', group:'agent', title:'WhatsApp-chats', icon:'chats', roles:['agent'],
-  crview:{ title:'Het chatvenster', intro:'Klik door wat je allemaal in het chatvenster kunt doen. Nagebouwd op basis van schermafdrukken.', keys:['chat'] },
-  lead:'Meerdere chats tegelijk en bijlagen.',
+  crview:{ title:'Het chatvenster', intro:'Klik door wat je allemaal in het chatvenster kunt doen, en hoe je quick responses gebruikt. Nagebouwd op basis van schermafdrukken.', keys:['chat','quickResp'] },
+  lead:'Meerdere chats tegelijk, bijlagen en quick responses.',
   photo:['portrait.jpg','Portret van een vrouw buiten bij het water'],
   uitleg:`<div class="prose"><ul>
     <li>Je kunt <b>meerdere chats tegelijk</b> hebben (maximaal 10). Ze staan onder elkaar in het belpaneel. Klik op een chat om hem te openen.</li>
-    <li><b>Bijlagen:</b> pdf's, foto's en dergelijke kun je versturen en ontvangen. Bijlagen blijven 24 uur beschikbaar ${tv('p-bijlagen')}. Contacten blijven 2 jaar bewaard.</li></ul></div>`,
+    <li><b>Bijlagen:</b> pdf's, foto's en dergelijke kun je versturen en ontvangen. Bijlagen blijven 24 uur beschikbaar. Contacten blijven 2 jaar bewaard.</li>
+    <li><b>Quick responses:</b> vaste antwoorden die je snel in de chat zet. Klik op het quick response-icoon naast de paperclip en kies een antwoord uit de lijst. Of typ de shortcut in het typvak: het antwoord verschijnt dan vanzelf.</li>
+    <li><b>Een eigen quick response?</b> Geef de tekst en de shortcut die je wilt gebruiken door aan je supervisor. Je supervisor maakt de quick response aan.</li></ul></div>`,
   demo:{ title:'Simulatie: drie chats en een bijlage', intro:'Wissel tussen de chats. Typ in de chat van PA 1 een antwoord en verstuur het. Stuur daarna een pdf mee met de paperclip.', mount: el => {
     const chats=[{n:'PA 1',num:'+31 6 12 34 56 78',log:[{me:0,t:'Hallo, wanneer komt mijn VISA-kaart?'}]},{n:'PA 2',num:'+31 6 22 33 44 55',log:[{me:0,t:'Mijn kind gaat naar een andere school.'}]},{n:'PA 3',num:'+31 6 98 76 54 32',log:[{me:0,t:'Goedemorgen, ik heb een vraag over aanmelden.'}]}];
     let cur=0, text='', menu=false, filter='', sentQR=false, sentPdf=false;
@@ -2966,6 +2994,7 @@ M({ id:'whatsapp', group:'agent', title:'WhatsApp-chats', icon:'chats', roles:['
   }},
   quiz:[
     {q:"Je hebt 10 chats open. Krijg je nog een nieuwe chat?", o:["Ja, er is geen maximum","Nee: je hebt maximaal 10 chats tegelijk"], a:1, f:"Je kunt maximaal 10 chats tegelijk hebben. Daarna krijg je geen nieuwe chat meer, een gesprek nog wel."},
+    {q:"Je stuurt vaak dezelfde uitleg over de VISA-kaart. Je wilt daar een quick response voor. Hoe regel je dat?", o:["Je maakt hem zelf aan in ContactRC","Je geeft de tekst en de shortcut die je wilt gebruiken door aan je supervisor: die maakt hem aan","Dat kan niet in ContactRC"], a:1, f:"Je supervisor maakt quick responses aan. Geef de tekst en de shortcut door die je wilt gebruiken. Daarna kies je hem in de chat via het icoon naast de paperclip, of typ je de shortcut."},
     {q:"Een PA stuurt een foto en jij downloadt hem. Wat moet je weten?", o:["Niets, dat ziet niemand","Downloads worden bijgehouden: je naam en de tijd komen in een logboek"], a:1, f:"Downloads worden bijgehouden. Beheerders kunnen zien wie een bestand heeft geopend."},
   ]
 });
@@ -3115,7 +3144,7 @@ M({ id:'outbound', rlviz:'out', crviz:['outcall','outmsg'], group:'agent', title
   uitleg:`<div class="prose">
     <h3>Bellen</h3>
     <ol><li>Zet jezelf op <b>Available</b>.</li><li>Open de <b>Number pad</b>.</li><li>Typ het nummer <b>altijd met landcode</b>, bijvoorbeeld +31.</li><li>Klik op <b>Call</b>. De PA ziet het nummer van Schoolmaaltijden.</li><li>Na afloop start <b>After Call Work</b>.</li></ol>
-    <p>Telt een uitgaand gesprek mee voor de volgorde waarin je inkomende gesprekken krijgt? ${tv('p-outbound-routing')}</p>
+    <p>Telt een uitgaand gesprek mee voor de volgorde waarin je inkomende gesprekken krijgt? Nee. Een uitgaand gesprek kun je altijd beginnen.</p>
     <h3>Outbound messaging app</h3>
     <p>Hier stuur je een <b>WhatsApp-template</b>: een vooraf goedgekeurd bericht, per taal. Je kiest het template, het telefoonnummer, de modus, het kanaal en het afzendnummer.</p>
     <p>Je opent de app via de tab <b>NLRC Outbound...</b>. Staat die tab er niet? Open de app dan via <b>Apps</b> rechtsboven.</p>
@@ -3268,17 +3297,23 @@ M({ id:'wachtrij', rlviz:'queue', crviz:['perf'], group:'agent', title:'Wachtrij
   <ol><li><b>Sta ik niet op Missed?</b> Dan krijg je niets. Klik de gemiste chat of het gemiste gesprek weg met Close contact.</li><li><b>Houd ik mijn After Call Work kort?</b> Zolang je in ACW zit, krijg je niets.</li></ol></div>`,
   compare:[{topic:'Wachtrij en statistieken', redline:REDLINE_WACHTRIJ, crc:'Via Apps open je het Performance-dashboard: wachtende contacten per queue, agents op een contact, de status van collega\'s en je eigen aantallen. Filter op tijd en klik op de drie puntjes om een tabel groot te maken.'}],
   demo:{ title:'Simulatie: de wachtrij loopt op', intro:'De wachtrij groeit. Vind en los op waarom jij niets binnenkrijgt.', mount: el => {
-    let status='missed', w=4, t=null, stage=0, dd=false;
+    let status='missed', w=4, t=null, stage=0;
     const tick=()=>{ if(status==='av'){ w=Math.max(0,w-1); } else w++; render(); };
+    const qTable=()=>pfCard('Current queue performance','Viewing current queue performance',`<div class="pf-t"><div class="pf-tr th"><span>Queue</span><span class="hl">Contacts in queue</span><span>Agents on contact</span><span>Agents available</span></div>${[['School Meals - Dutch',w,3,status==='av'?1:0],['School Meals - English',1,1,0],['School Meals - Arabic',0,1,0],['School Meals - Turkish',0,0,0]].map(r=>`<div class="pf-tr"><span>${r[0]} ⋮</span><span style="${r[1]>5?'color:#D61F26;font-weight:700':''}">${r[1]}</span><span>${r[2]}</span><span>${r[3]}</span></div>`).join('')}</div>`);
     const render=()=>{
-      const top = dd?`<div class="ddl"><button data-st="av">Available</button><button data-st="off">Offline</button></div>`:'';
-      el.innerHTML = `<div class="hint ${status==='av'?'good':'bad'}">${ic(status==='av'?'check':'alert')}<span>${status==='av'?(stage===3?'Goed zo: ACW kort gehouden en afgesloten. Je krijgt weer contacten.':'Het gemiste contact is gesloten: je staat vanzelf weer op Available. Je krijgt een gesprek, helpt de PA... wacht even.'):status==='acw'?'Je hebt een gesprek afgerond, maar je After Call Work staat nog open. Zolang krijg je niets. Sluit af.':'De wachtrij loopt op en jij krijgt niets. Waarom? Kijk links in je belpaneel.'}</span></div>
-      ${crc({status, extra:top, slot: status==='missed'?`<div class="card-in" style="border-color:#C62828;background:#FDECEA"><b>${ic('alert')} Missed contact</b><div>Cannot accept more contacts until this contact is closed.</div><button class="obtn fill hot" data-closemiss>Close contact</button></div>`:status==='acw'?`<div class="card-in" style="border-color:#B26A00;background:#FFF6E5"><b>After Call Work</b><button class="obtn fill" data-acw>Label: VISA- Pincode vergeten · Close contact</button></div>`:'', pane:`<div class="box"><b>Queues</b><div class="qstat" style="margin-top:8px"><div>NL wachtend<b style="color:${w>5?'#C62828':'inherit'}">${w}</b></div><div>Langste wachttijd<b>${String(Math.min(59,2+w)).padStart(2,'0')}:${w%2?'30':'05'}</b></div><div>EN wachtend<b>1</b></div><div>AR / TR wachtend<b>0</b></div></div></div>`})}`;
+      let left, right, tabs=['Customer','Performance...'], active='Performance...';
+      if(status==='missed'){ left=crvTop()+crvCard(true)+CRV_MISSED(true).replace('<div class="crv-close','<div data-closemiss class="crv-close'); right=qTable(); }
+      else if(status==='acw'){ left=crvCallAcw(true).replace('<span class="crv-pbtn','<span data-acwclose class="crv-pbtn'); tabs=['Customer','After Contact','Performance...']; active='After Contact'; right=crvFlowOk(); }
+      else { left=crvTop(stage===1)+crvWelcome(); right=qTable(); }
+      const hint = status==='missed' ? 'De wachtrij loopt op en jij krijgt niets. Waarom? Kijk links in je scherm.'
+        : status==='acw' ? 'Je hebt een gesprek gehad. Je labels zijn al opgeslagen (Submit disposition en Done), maar het contact staat nog open in <b>After call work</b>. Zolang krijg je niets. Klik links onderaan op <b>Close contact</b>.'
+        : stage===3 ? 'Goed zo: het contact is gesloten. Je krijgt weer contacten en de wachtrij loopt terug.'
+        : 'Het gemiste contact is gesloten: je staat vanzelf weer op Available. Je krijgt een gesprek en helpt de PA... wacht even.';
+      el.innerHTML = `<div class="hint ${status==='av'?'good':'bad'}">${ic(status==='av'?'check':'alert')}<span>${hint}</span></div><div class="crv-scr">${crvShell({left, right, tabs, active})}</div><p class="muted" style="font-size:.82rem;margin-top:8px">Nagebouwd op basis van schermafdrukken van ContactRC. De cijfers zijn voorbeelden.</p>`;
     };
-    el.addEventListener('click',e=>{ if(e.target.closest('[data-act="status"]')){ dd=!dd; render(); return; }
+    el.addEventListener('click',e=>{
       if(e.target.closest('[data-closemiss]') && status==='missed'){ status='av'; stage=1; setTimeout(()=>{ if(stage===1){ status='acw'; stage=2; render(); } }, 5000); render(); return; }
-      const s=e.target.closest('[data-st]'); if(s){ dd=false; if(s.dataset.st==='av' && status==='missed'){ status='av'; stage=1; setTimeout(()=>{ if(stage===1){ status='acw'; stage=2; render(); } }, 5000); } render(); return; }
-      if(e.target.closest('[data-acw]')){ status='av'; stage=3; render(); } });
+      if(e.target.closest('[data-acwclose]') && status==='acw'){ status='av'; stage=3; render(); } });
     clearInterval(t); t=setInterval(()=>{ if(!document.body.contains(el)){ clearInterval(t); return; } tick(); }, 2500);
     render();
   }},
@@ -3403,13 +3438,14 @@ M({ id:'misgaat', group:'afsluiting', title:'Als het misgaat', icon:'help', role
 
 /* 21. Oefenscenario's */
 const DUO = [
-  {t:'Nieuwe beller in het Nederlands', ch:'phone', mod:'reis-pa', pa:'Bel het nummer van ContactRC, kies 1 en stel een vraag over je VISA-kaart.', ag:'Zet je op Available, neem aan, bekijk het klantprofiel, zet de PA even in de wacht en rond af met een label.'},
+  {t:'Nieuwe beller in het Nederlands', ch:'phone', mod:'reis-pa', pa:'Bel het oefennummer, kies 1 en stel een vraag over je VISA-kaart.', ag:'Zet je op Available, neem aan, bekijk het klantprofiel, zet de PA even in de wacht en rond af met een label.'},
   {t:'Gemist en terug', ch:'phone', mod:'gesprek-krijgen', pa:'Bel in.', ag:'Laat het gesprek bewust verlopen. Kijk naar je status. Sluit het gemiste contact met Close contact en neem het volgende gesprek aan.'},
   {t:'Persoonlijk doorverbinden', ch:'phone', mod:'transfer', pa:'Bel in en vraag naar iemand die Engels spreekt.', ag:'Verbind door naar een collega (of de Engelse queue): overleg eerst, ga met z\'n drieën verder en stap dan uit.'},
-  {t:'Callback en voicemail', ch:'phone', mod:'callbacks', pa:'Kies 1 bij het callback-aanbod. Neem bij de eerste poging niet op.', ag:'Neem de callback aan, luister naar de whisper en hang op vóór de voicemail opneemt.'},
+  {t:'Callback en voicemail', ch:'phone', mod:'callbacks', pa:'Bel het oefennummer en wacht 5 minuten in de wachtrij. Kies dan een callback (toets 1). Neem bij de eerste poging niet op.', ag:'Neem de callback aan, luister naar de whisper en hang op vóór de voicemail opneemt.'},
   {t:'WhatsApp in het Engels', ch:'chat', mod:'taal', pa:'Stuur een WhatsApp, kies 2 (Engels) en stel je vraag in het Engels.', ag:'Neem de chat aan, antwoord in het Nederlands en kijk samen wat de PA ontvangt.'},
   {t:'Bijlage sturen', ch:'chat', mod:'whatsapp', pa:'Stuur een WhatsApp met een vraag.', ag:'Beantwoord de vraag en stuur met de paperclip een pdf mee.'},
-  {t:'Template na 24 uur', ch:'chat', mod:'outbound', pa:'Wacht op een bericht van de agent.', ag:'Stuur via de outbound messaging app een template met Start conversation.'},
+  {t:'Outbound bericht sturen', ch:'chat', mod:'outbound', pa:'Wacht op een bericht van de agent en reageer erop.', ag:'Stuur via de outbound messaging app een WhatsApp-template met Start conversation.'},
+  {t:'Quick response gebruiken', ch:'chat', mod:'whatsapp', pa:'Stuur een WhatsApp met een vraag.', ag:'Beantwoord de vraag met een quick response: klik op het quick response-icoon naast de paperclip en kies een antwoord. Probeer daarna ook de shortcut in het typvak.'},
   {t:'Taal resetten', ch:'chat', mod:'taal', pa:'Kies per ongeluk een verkeerde taal.', ag:'Reset de taal van de PA via de outbound messaging app. De PA stuurt opnieuw een bericht en krijgt de taalvraag.'},
   {t:'Uitbellen', ch:'phone', mod:'outbound', pa:'Neem op als je gebeld wordt. Welk nummer zie je?', ag:'Bel de PA via de Number pad, met landcode. Rond af in After Call Work.'},
   {t:'Logs en melden', ch:'help', mod:'misgaat', pa:'Kijk mee.', ag:'Download je logs via het tandwiel en schrijf een melding met wat, hoe laat, welk contact, screenshot en logs.'},
@@ -3417,7 +3453,7 @@ const DUO = [
 M({ id:'oefenen', group:'afsluiting', title:'Oefenscenario\'s in duo\'s', icon:'users', roles:['agent','manager'],
   lead:'Voor de hands-on sessie in het echte ContactRC: één agent, één PA.',
   photo:['volunteer.jpg','Een lachende vrijwilliger in Rode Kruisjas'],
-  uitleg:`<div class="prose"><p>In de hands-on sessie oefen je in duo's in het echte ContactRC. Eén van jullie is de <b>agent</b>, de ander de <b>PA</b> (met een eigen telefoon). Wissel na elk scenario van rol. Vink af wat je hebt gedaan.</p><p>Op <b>dinsdag 27 oktober</b> volgt de <b>simulatie</b>: een sessie van 2 uur in het echte ContactRC. De ene groep speelt de hulpvrager (PA), de andere groep de agent. Je kunt dezelfde scenario's gebruiken.</p></div>`,
+  uitleg:`<div class="prose"><div class="callout big">${ic('phone')}<div><b>Oefennummer (alleen voor de testomgeving)</b><br><span class="mono" style="font-size:1.15rem">+31 70 798 0426</span><br><span class="muted" style="font-size:.88rem">Dit nummer werkt alleen in de testomgeving. Het is niet het nummer voor PA's.</span></div></div><p>In de hands-on sessie oefen je in duo's in het echte ContactRC. Eén van jullie is de <b>agent</b>, de ander de <b>PA</b> (met een eigen telefoon). Wissel na elk scenario van rol. Vink af wat je hebt gedaan.</p><p>Op <b>dinsdag 27 oktober</b> volgt de <b>simulatie</b>: een sessie van 2 uur in het echte ContactRC. De ene groep speelt de hulpvrager (PA), de andere groep de agent. Je kunt dezelfde scenario's gebruiken.</p></div>`,
   demo:{ title:'Scenario\'s', intro:'', mount: el => {
     let done={}; try{ done=JSON.parse(localStorage.getItem('crc-duo')||'{}'); }catch(e){}
     const render=()=>{ el.innerHTML = `<div class="grid2">${DUO.map((d,i)=>`<div class="card flat" style="padding:16px;display:grid;gap:8px;${done[i]?'border-color:var(--ok)':''}"><div class="row" style="justify-content:space-between"><b style="font-family:var(--f-display)">${ic(d.ch==='chat'?'chat':d.ch==='help'?'help':'phone')} ${i+1}. ${esc(d.t)}</b><button class="btn sm ${done[i]?'':'soft'}" data-i="${i}">${done[i]?ic('check')+' Gedaan':'Afvinken'}</button></div><div style="font-size:.93rem"><b>PA:</b> ${esc(d.pa)}</div><div style="font-size:.93rem"><b>Agent:</b> ${esc(d.ag)}</div><a href="#${d.mod}" style="font-size:.85rem">${ic('book')} Terugkijken in de module</a></div>`).join('')}</div>`; };
@@ -3562,7 +3598,7 @@ function renderTraining(){
 MODULES.forEach((m,i)=>m.nr=i+1);
 const GROUPS = [['start','Start'],['basis','Basis'],['agent','Agent'],['manager','Manager'],['afsluiting','Afsluiting']];
 const routeMods = (rol=S.rol) => MODULES.filter(m=>m.roles.includes(rol||'agent'));
-const optMods = (rol=S.rol) => MODULES.filter(m=>!m.roles.includes(rol||'agent'));
+const optMods = (rol=S.rol) => (rol||'agent')==='manager' ? MODULES.filter(m=>!m.roles.includes('manager')) : [];
 const pct = () => { const r=routeMods(); return r.length ? Math.round(r.filter(m=>S.done[m.id]).length/r.length*100) : 0; };
 let navOpen=false;
 
@@ -3619,7 +3655,7 @@ function renderStart(wanted){
       <div class="callout warn">${ic('alert')}<div>Let op: sluit je de browser, dan ben je je voortgang waarschijnlijk kwijt. Rond een module daarom het liefst in één keer af.</div></div>
       <div id="startErr"></div></form></section>`}
     <section><h2 style="margin-bottom:12px">Zo verloopt de training</h2><div class="phases">
-      ${[['book','Zelfstudie en oefenen','In dit platform: lees de uitleg per module en oefen met simulaties, scenario\'s en quizvragen.'],['users','Hands-on','In het echte ContactRC, in duo\'s, met dezelfde scenario\'s.'],['target','Simulatie op 27 oktober','Sessie van 2 uur in het echte ContactRC. De ene groep speelt de hulpvrager (PA), de andere groep de agent.'],['help','Naslag','Na de livegang: zoek hier terug hoe iets werkt.']].map((p,i)=>`<div class="phase">${ic(p[0])}<span class="num">Fase ${i+1}</span><b>${p[1]}</b><span class="muted" style="font-size:.92rem">${p[2]}</span></div>`).join('')}</div></section>
+      ${[['users','Presentatie op kantoor','Je krijgt op kantoor uitleg over ContactRC en de overstap.'],['book','Zelfstudie in dit platform','Lees de uitleg per module en oefen met simulaties, scenario\'s en quizvragen.'],['target','Simulatie op kantoor','Op 27 oktober: een sessie van 2 uur in het echte ContactRC. De ene groep speelt de hulpvrager (PA), de andere groep de agent.'],['help','Kom altijd terug','Ook na de go-live: kijk hier terug hoe iets werkt.']].map((p,i)=>`<div class="phase">${ic(p[0])}<span class="num">Fase ${i+1}</span><b>${p[1]}</b><span class="muted" style="font-size:.92rem">${p[2]}</span></div>`).join('')}</div></section>
     ${photo('desk.jpg','Een medewerker aan een bureau met twee schermen')}
   </div>`;
   const f=$('#startForm');
@@ -3751,6 +3787,7 @@ function route(){
   const mod = MODULES.find(m=>m.id===id);
   if(mod && !S.naam){ try{ sessionStorage.setItem('crc-pend', id); }catch(e){} }
   if(!mod || !S.naam){ renderStart(mod && !S.naam ? mod : null); renderShellBits(); return; }
+  if((S.rol||'agent')!=='manager' && !mod.roles.includes('agent')){ renderStart(null); renderShellBits(); return; }
   renderModule(mod); renderShellBits();
 }
 window.addEventListener('hashchange', route);
